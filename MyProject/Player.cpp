@@ -8,21 +8,21 @@
 Player::Player(std::string &name, sf::Font textfont)
 {
 	Movable = true;
-	TextureSize = sf::Vector2i(164, 265);
-	TextureFlySize = sf::Vector2i(174, 382);
+	TextureSize = sf::Vector2i(95, 154);	//164, 265 for hdr
+	TextureFlySize = sf::Vector2i(101, 222);	//174, 382 for hdr
 	Font = textfont;
-	Scale = 1.0f;
+	Scale = 1.0f;	//change for hdr (approx. 0.5f) test for this
 	Name = name;
 	Text.setString(name);
 	Text.setFont(Font);
-	Text.setCharacterSize((int) 36*Scale);
+	Text.setCharacterSize((int) 24*Scale);	//36 for hdr
 	Text.setFillColor(sf::Color::Green);
 	//Text.setColor(sf::Color::White);
 	//Text.setPosition();
-	if (!Texture.loadFromFile("textures/walk_4.png")) {
+	if (!Texture.loadFromFile("textures/lwalk_4.png")) {
 		
 	}
-	if (!TextureFly.loadFromFile("textures/fly_4.png")) {
+	if (!TextureFly.loadFromFile("textures/lfly_4.png")) {
 
 	}
 	Sprite.setTexture(Texture);
@@ -69,7 +69,7 @@ void Player::update()
 		if (VSpeed < -SpeedLimit*0.9f) VSpeed = pVSpeed;
 		if (!pIsFlying) Sprite.setTexture(TextureFly);
 		TextureCounter = (TextureCounter + 15) % 16;
-		this->Sprite.setTextureRect(sf::IntRect((TextureCounter / 4)*TextureFlySize.x+9, 1, TextureFlySize.x, TextureFlySize.y));
+		this->Sprite.setTextureRect(sf::IntRect((TextureCounter / 4)*TextureFlySize.x+5, 0, TextureFlySize.x, TextureFlySize.y));	// +9 or 10 for hdr
 		Sprite.setOrigin(TextureFlySize.x / 2, TextureSize.y / 2);
 		Sprite.setScale(sf::Vector2f(Scale, Scale));
 		Sprite.setRotation(0);
@@ -87,7 +87,7 @@ void Player::update()
 		if (VSpeed > SpeedLimit) VSpeed = pVSpeed;
 		if (!pIsFlying) Sprite.setTexture(TextureFly);
 		TextureCounter = (TextureCounter + 15) % 16;
-		this->Sprite.setTextureRect(sf::IntRect((TextureCounter / 4)*TextureFlySize.x+9, 1, TextureFlySize.x, TextureFlySize.y));
+		this->Sprite.setTextureRect(sf::IntRect((TextureCounter / 4)*TextureFlySize.x+5, 0, TextureFlySize.x, TextureFlySize.y)); // +9 or 10 for hdr
 		Sprite.setOrigin(TextureFlySize.x / 2, TextureSize.y / 2);
 		Sprite.setScale(sf::Vector2f(Scale, Scale));
 		Sprite.setRotation(180);
@@ -112,7 +112,7 @@ void Player::update()
 		if (VSpeed > SpeedLimit) VSpeed = pVSpeed;
 		if (!IsFlying) Sprite.setTexture(TextureFly);
 		if (!IsFlying) TextureCounter = (TextureCounter + 15) % 16;
-		if (!IsFlying) this->Sprite.setTextureRect(sf::IntRect((TextureCounter / 4)*TextureFlySize.x+9, 1, TextureFlySize.x, TextureFlySize.y));
+		if (!IsFlying) this->Sprite.setTextureRect(sf::IntRect((TextureCounter / 4)*TextureFlySize.x+5, 0, TextureFlySize.x, TextureFlySize.y)); // +9 or 10 for hdr
 		Sprite.setOrigin(TextureFlySize.x / 2, TextureSize.y / 2);
 		if (!IsFlying) Sprite.setScale(sf::Vector2f(Scale, Scale));
 		int temp2 = Sprite.getRotation();
@@ -145,7 +145,7 @@ void Player::update()
 		if (VSpeed > SpeedLimit) VSpeed = pVSpeed;
 		if (!IsFlying) Sprite.setTexture(TextureFly);
 		if (!IsFlying) TextureCounter = (TextureCounter + 1) % 16;
-		if (!IsFlying) this->Sprite.setTextureRect(sf::IntRect((TextureCounter / 4)*TextureFlySize.x+9, 1, TextureFlySize.x, TextureFlySize.y));
+		if (!IsFlying) this->Sprite.setTextureRect(sf::IntRect((TextureCounter / 4)*TextureFlySize.x+5, 0, TextureFlySize.x, TextureFlySize.y)); // +9 or 10 for hdr
 		Sprite.setOrigin(TextureFlySize.x / 2, TextureSize.y / 2);
 		if (!IsFlying) Sprite.setScale(sf::Vector2f(Scale, Scale));
 		if (IsFlying) Sprite.setRotation((Sprite.getRotation() + 90)/2);
