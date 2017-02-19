@@ -10,6 +10,7 @@ public:
 	~Player();
 	float Speed;
 	float VSpeed;
+	float HSpeed;
 	bool IsFlying = false;
 	bool IsWalking = false;
 	std::string Name;
