@@ -8,6 +8,5 @@ public:
 	~Bullet();
 private:
 	int damage;
-	
 };
 
