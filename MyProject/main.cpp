@@ -20,7 +20,7 @@ int main()
 	bgSprite.setTextureRect(sf::IntRect(0,0,1366,768));
 	std::string name = "bhanu";
 	sf::Font font;
-	font.loadFromFile("fonts/arial.ttf");
+	font.loadFromFile("fonts/arial.ttf");	//3 other Fonts Available
 	Player player(name, font);
 	window.setFramerateLimit(30);
 	while (window.isOpen())
