@@ -3,7 +3,7 @@
 #include <iostream>
 using namespace std;
 
-int main()
+int mainMenu()
 {
 	sf::RenderWindow window(sf::VideoMode(600, 600), "Shooter Game");
 
@@ -59,4 +59,5 @@ int main()
 
 		window.display();
 	}
+	return 0;
 }
