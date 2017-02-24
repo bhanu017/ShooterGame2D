@@ -1,7 +1,8 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include "GameObject.h"
+#include "Weapon.h"
 #include <string>
+#include <vector>
 
 class Player : public GameObject
 {
@@ -15,9 +16,17 @@ public:
 	bool IsWalking = false;
 	std::string Name;
 	int Health;
+	Weapon *CurrentWeapon;
+	Weapon *OtherWeapon;
+	std::string LastDamager;
 	int Nitro;
-	void update();
+	void update(sf::RenderWindow &window);
+	void releaseWeapon(std::vector<Weapon *> &unacquired);
+	void acquireweapon(std::vector<Weapon*>& unacquired);
+	void changeweapon();
+	void draw(sf::RenderWindow & window);
 private:
+	sf::RectangleShape focusline;
 	int SpeedLimit;
 	int TextureCounter = 0;
 	sf::Vector2i TextureFlySize;

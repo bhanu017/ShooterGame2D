@@ -60,11 +60,38 @@ int main()
 		window.display();
 	}
 	std::string name = "bhanu";
+	bool isfiring;
 	sf::Font font;
+	int justfired = 0;
 	font.loadFromFile("fonts/arial.ttf");	//3 other Fonts Available
-	if (selection == 1) {
+	/*showing Health on screen*/
+	sf::RectangleShape healthbar(sf::Vector2f(200.0f, 8.0f));
+	sf::RectangleShape healthstatus(sf::Vector2f(200.0f, 8.0f));
+	healthbar.setOutlineColor(sf::Color::White);
+	healthbar.setOutlineThickness(2.0f);
+	healthbar.setOrigin(sf::Vector2f(0.0f, 4.0f));
+	healthstatus.setOrigin(sf::Vector2f(0.0f, 4.0f));
+	healthbar.setPosition(sf::Vector2f(window.getSize().x - 250, 20.0f));
+	healthstatus.setPosition(sf::Vector2f(window.getSize().x - 250, 20.0f));
+	healthbar.setFillColor(sf::Color::Transparent);
+	/*showing Nitro on screen*/
+	sf::RectangleShape nitrobar(sf::Vector2f(200.0f, 8.0f));
+	sf::RectangleShape nitrostatus(sf::Vector2f(200.0f, 8.0f));
+	nitrobar.setOutlineColor(sf::Color::White);
+	nitrobar.setOutlineThickness(2.0f);
+	nitrobar.setOrigin(sf::Vector2f(0.0f, 4.0f));
+	nitrostatus.setOrigin(sf::Vector2f(0.0f, 4.0f));
+	nitrobar.setPosition(sf::Vector2f(window.getSize().x - 250, 40.0f));
+	nitrostatus.setPosition(sf::Vector2f(window.getSize().x - 250, 40.0f));
+	nitrobar.setFillColor(sf::Color::Transparent);
+	if (selection == 1) { 
 		//Once the Game starts
 		// Load an image file from a file
+		// let's define a view
+		sf::View player_view(sf::FloatRect(0, 0, 1366, 768));
+
+		// want to do visibility checks? retrieve the view
+		sf::View currentView = window.getView();
 		sf::Texture background;
 		if (!background.loadFromFile("textures/bg_new.png"))
 			return -1;
@@ -73,9 +100,16 @@ int main()
 		bgSprite.setTexture(background);
 		bgSprite.setTextureRect(sf::IntRect(0, 0, 1366, 768));
 		Player player(name, font);
+		vector<Weapon *> unacquiredWeapons;
+		vector<Bullet *> releasedBullets;
+		sf::Texture spark;
+		spark.loadFromFile("textures/spark.png");
+		sf::Sprite Spark;
+		Spark.setTexture(spark);
 		window.setFramerateLimit(30);
 		while (window.isOpen())
 		{
+			isfiring = false;
 			sf::Event event;
 			while (window.pollEvent(event))
 			{
@@ -85,7 +119,7 @@ int main()
 					switch (event.key.code) {
 					case sf::Keyboard::Escape:
 						if (fullscreen) {
-							window.create(sf::VideoMode(800, 600), "FunShooter", sf::Style::Default);
+							window.create(sf::VideoMode(1366, 768), "FunShooter", sf::Style::Default);
 							fullscreen = false;
 						}
 						else {
@@ -94,12 +128,25 @@ int main()
 						break;
 					case sf::Keyboard::Return:
 						if (!fullscreen) {
-							window.create(sf::VideoMode(800, 600), "FunShooter", sf::Style::Fullscreen);
+							window.create(sf::VideoMode(1366, 768), "FunShooter", sf::Style::Fullscreen);
 							fullscreen = true;
 						}
 						break;
+					case sf::Keyboard::LAlt:
+						player.changeweapon();
+						break;
+					case sf::Keyboard::L:
+						player.releaseWeapon(unacquiredWeapons);
+						break;
+					case sf::Keyboard::G:
+						player.acquireweapon(unacquiredWeapons);
+						break;
 					}
-
+				}
+			}
+			if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Z) || sf::Mouse::isButtonPressed(sf::Mouse::Left))) {
+				if (player.CurrentWeapon->fire(player.Name, releasedBullets, window, Spark) == true) {
+					isfiring = true;
 				}
 			}
 			/*if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
@@ -108,11 +155,42 @@ int main()
 			window.clear();
 			//window.draw(shape);
 			window.draw(bgSprite);
-			player.update();
+			/*Draw Health Bar*/
+			healthstatus.setSize(sf::Vector2f(2*player.Health, 8.0f));
+			healthstatus.setFillColor(sf::Color::Magenta);
+			window.draw(healthstatus);
+			window.draw(healthbar);
+			/*Draw Health Bar*/
+			/*Draw Nitro Bar*/
+			nitrostatus.setSize(sf::Vector2f(player.Nitro/10, 8.0f));
+			nitrostatus.setFillColor(sf::Color::Cyan);
+			window.draw(nitrostatus);
+			window.draw(nitrobar);
+			/*Draw Nitro Bar*/
+			player.update(window);
+			for (int i = 0; i < releasedBullets.size(); i++) {		//WORK here. we need to damage the player if it passes
+				//through the player and destroy the bullet
+				releasedBullets[i]->update();
+				releasedBullets[i]->draw(window);
+				//window.draw(releasedBullets[i]->Text);
+			}
+			for (int i = 0; i < unacquiredWeapons.size(); i++) {	//WORK here.we need to make Movable to false, as soon as it gets to rest
+				//Then the weapon will be available for use by another player (work of colliders)
+				//also destroy the guns if there are no bullets in it after touching the ground (whatever you feel)
+				if (unacquiredWeapons[i]->Movable) unacquiredWeapons[i]->freefall();
+				unacquiredWeapons[i]->draw(window);
+			}
+			//player_view.setCenter(player.Sprite.getPosition());
+			//window.setView(player_view);
 			player.draw(window);
+			if (isfiring) {
+				window.draw(Spark);
+			}
+			if (player.CurrentWeapon != NULL) player.CurrentWeapon->draw(window);
 			/*if (player.VSpeed > 200.0f) {
 				window.close();
 			}*/
+			//activate it
 			window.display();
 		}
 	}
@@ -122,6 +200,9 @@ int main()
 		t.setString("Page is Under Construction");
 		t.setFillColor(sf::Color::Yellow);
 		t.setCharacterSize(42);
+		window.clear();
+		window.draw(t);
+		window.display();
 		while (window.isOpen())
 		{
 			sf::Event event;
@@ -133,7 +214,7 @@ int main()
 					switch (event.key.code) {
 					case sf::Keyboard::Escape:
 						if (fullscreen) {
-							window.create(sf::VideoMode(800, 600), "FunShooter", sf::Style::Default);
+							window.create(sf::VideoMode(1366, 768), "FunShooter", sf::Style::Default);
 							fullscreen = false;
 						}
 						else {
@@ -142,7 +223,7 @@ int main()
 						break;
 					case sf::Keyboard::Return:
 						if (!fullscreen) {
-							window.create(sf::VideoMode(800, 600), "FunShooter", sf::Style::Fullscreen);
+							window.create(sf::VideoMode(1366, 768), "FunShooter", sf::Style::Fullscreen);
 							fullscreen = true;
 						}
 						break;
@@ -150,9 +231,6 @@ int main()
 
 				}
 			}
-			window.clear();
-			window.draw(t);
-			window.display();
 		}
 
 	}
