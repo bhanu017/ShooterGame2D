@@ -1,12 +1,15 @@
 #include <SFML/Graphics.hpp>
 #include "Player.h"
 #include "Menu.h"
+#include "Mapping.h"
 #include <string>
 
 using namespace std;
 int main()
 {
-	sf::RenderWindow window(sf::VideoMode(1366, 768), "FunShooter", sf::Style::Default);
+	int windowHeight = 640; /*Vertical length*/
+	int windowWidth = 640; /*Horizontal length*/
+	sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight), "FunShooter", sf::Style::Default);/**/
 	bool fullscreen = false;
 	Menu menu(window.getSize().x, window.getSize().y);
 	int selection = 0;
@@ -88,17 +91,21 @@ int main()
 		//Once the Game starts
 		// Load an image file from a file
 		// let's define a view
-		sf::View player_view(sf::FloatRect(0, 0, 1366, 768));
+		sf::View player_view(sf::FloatRect(0, 0, windowWidth, windowHeight));/**/
 
 		// want to do visibility checks? retrieve the view
 		sf::View currentView = window.getView();
 		sf::Texture background;
-		if (!background.loadFromFile("textures/bg_new.png"))
+		bool isLoaded;
+		isLoaded = background.loadFromFile("textures/bg_new.png");
+		if (!isLoaded)
 			return -1;
 		background.setRepeated(true);
 		sf::Sprite bgSprite;
 		bgSprite.setTexture(background);
-		bgSprite.setTextureRect(sf::IntRect(0, 0, 1366, 768));
+		bgSprite.setTextureRect(sf::IntRect(0, 0, windowWidth, windowHeight));/**/
+		Mapping::mapping();
+
 		Player player(name, font);
 		vector<Weapon *> unacquiredWeapons;
 		vector<Bullet *> releasedBullets;
@@ -119,7 +126,7 @@ int main()
 					switch (event.key.code) {
 					case sf::Keyboard::Escape:
 						if (fullscreen) {
-							window.create(sf::VideoMode(1366, 768), "FunShooter", sf::Style::Default);
+							window.create(sf::VideoMode(windowWidth, windowHeight), "FunShooter", sf::Style::Default);/**/
 							fullscreen = false;
 						}
 						else {
@@ -128,7 +135,7 @@ int main()
 						break;
 					case sf::Keyboard::Return:
 						if (!fullscreen) {
-							window.create(sf::VideoMode(1366, 768), "FunShooter", sf::Style::Fullscreen);
+							window.create(sf::VideoMode(windowWidth, windowHeight), "FunShooter", sf::Style::Fullscreen);/**/
 							fullscreen = true;
 						}
 						break;
@@ -214,7 +221,7 @@ int main()
 					switch (event.key.code) {
 					case sf::Keyboard::Escape:
 						if (fullscreen) {
-							window.create(sf::VideoMode(1366, 768), "FunShooter", sf::Style::Default);
+							window.create(sf::VideoMode(windowWidth, windowHeight), "FunShooter", sf::Style::Default);/**/
 							fullscreen = false;
 						}
 						else {
@@ -223,7 +230,7 @@ int main()
 						break;
 					case sf::Keyboard::Return:
 						if (!fullscreen) {
-							window.create(sf::VideoMode(1366, 768), "FunShooter", sf::Style::Fullscreen);
+							window.create(sf::VideoMode(windowWidth, windowHeight), "FunShooter", sf::Style::Fullscreen);/**/
 							fullscreen = true;
 						}
 						break;
