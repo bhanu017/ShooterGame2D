@@ -97,7 +97,7 @@ int main()
 		sf::View currentView = window.getView();
 		sf::Texture background;
 		bool isLoaded;
-		isLoaded = background.loadFromFile("textures/bg_new.png");
+		isLoaded = background.loadFromFile("textures/Map.png");
 		if (!isLoaded)
 			return -1;
 		background.setRepeated(true);
