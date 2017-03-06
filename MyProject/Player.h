@@ -10,13 +10,13 @@ class Player : public GameObject
 public:
 	Player(std::string &Name, sf::Font textfont);
 	~Player();
-	float Speed;
-	float VSpeed;
 	float HSpeed;
+	float VSpeed;
 	bool IsFlying = false;
 	bool IsWalking = false;
 	std::string Name;
 	int Health;
+	sf::Vector2f PrevPos;
 	Weapon *CurrentWeapon;
 	Weapon *OtherWeapon;
 	std::string LastDamager;
@@ -27,13 +27,15 @@ public:
 	void changeweapon();
 	void draw(sf::RenderWindow & window);
 private:
+	float HSpeedFly;
+	float HSpeedWalk;
 	sf::RectangleShape focusline;
 	int SpeedLimit;
 	int TextureCounter = 0;
-	sf::Vector2i TextureFlySize;
-	sf::Texture TextureFly;
 	float GForce;
 	float JetForce;
+	sf::Vector2i TextureFlySize;
+	sf::Texture TextureFly;
 protected:
 };
 

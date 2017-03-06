@@ -36,9 +36,9 @@ Player::Player(std::string &name, sf::Font textfont)
 	Sprite.setScale(sf::Vector2f(Scale, Scale));
 	Health = 100;
 	Nitro = 2000;
-	Speed = 90.0f;
+	HSpeedWalk = 90.0f;
 	VSpeed = 0.0f;
-	HSpeed = 180.0f;
+	HSpeedFly = 180.0f;
 	JetForce = -1000.0f;
 	SpeedLimit = 250.0f;
 	LastDamager = "";
@@ -69,6 +69,8 @@ void Player::update(sf::RenderWindow &window, World &world)
 	bool pIsFlying = IsFlying;
 	IsFlying = false;
 	IsWalking = false;
+	PrevPos = Sprite.getPosition();
+	HSpeed = 0.0f;
 	if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) || (sf::Keyboard::isKeyPressed(sf::Keyboard::W))) {
 		IsFlying = true;
 		if (Nitro < 50) {
@@ -106,7 +108,6 @@ void Player::update(sf::RenderWindow &window, World &world)
 			{
 				Resolver::CollisionResolver(window, this, world);
 			}
-
 		VSpeed = VSpeed + (-JetForce + GForce) / 30;
 		if (VSpeed > SpeedLimit) VSpeed = pVSpeed;
 		if (!pIsFlying) Sprite.setTexture(TextureFly);
@@ -132,7 +133,7 @@ void Player::update(sf::RenderWindow &window, World &world)
 			VSpeed = 0;
 			Nitro += 4;
 		}
-		HSpeed = -abs(HSpeed);
+		HSpeed = -HSpeedFly;
 		this->Sprite.move(HSpeed / 30, VSpeed / 30 + 0.5f*(GForce)*(1 / 900));
 		if (Collision::PlayerWall(window, this, world))
 		{
@@ -173,7 +174,7 @@ void Player::update(sf::RenderWindow &window, World &world)
 			VSpeed = 0;
 			Nitro += 4;
 		}
-		HSpeed = abs(HSpeed);
+		HSpeed = HSpeedFly;
 		this->Sprite.move(HSpeed / 30, VSpeed / 30 + 0.5f*(GForce)*(1 / 900));
 		if (Collision::PlayerWall(window, this, world))
 		{
@@ -205,8 +206,8 @@ void Player::update(sf::RenderWindow &window, World &world)
 			VSpeed = 0;
 		}
 		else IsWalking = true;
-		Speed = -abs(Speed);
-		this->Sprite.move(Speed / 30, VSpeed / 30 + 0.5f*(GForce)*(1 / 900));
+		HSpeed = -HSpeedWalk;
+		this->Sprite.move(HSpeed / 30, VSpeed / 30 + 0.5f*(GForce)*(1 / 900));
 		if (Collision::PlayerWall(window, this, world))
 		{
 			Resolver::CollisionResolver(window, this, world);
@@ -236,8 +237,8 @@ void Player::update(sf::RenderWindow &window, World &world)
 			VSpeed = 0;
 		}
 		else IsWalking = true;
-		Speed = abs(Speed);
-		this->Sprite.move(Speed / 30, VSpeed / 30 + 0.5f*(GForce)*(1 / 900));
+		HSpeed = HSpeedWalk;
+		this->Sprite.move(HSpeed / 30, VSpeed / 30 + 0.5f*(GForce)*(1 / 900));
 		if (Collision::PlayerWall(window, this, world))
 		{
 			Resolver::CollisionResolver(window, this, world);
@@ -302,8 +303,7 @@ void Player::releaseWeapon(std::vector<Weapon*> &unacquired)
 	else {
 		CurrentWeapon->Movable = true;
 		CurrentWeapon->Name = "";
-		if (IsWalking) CurrentWeapon->Velocity.x = Speed;
-		else if (IsFlying) CurrentWeapon->Velocity.x = HSpeed;
+		CurrentWeapon->Velocity.x = HSpeed;
 		unacquired.push_back(CurrentWeapon);
 		CurrentWeapon = NULL;
 	}
