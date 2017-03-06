@@ -10,7 +10,7 @@ Weapon::Weapon(std::string name, sf::Font textfont, sf::Vector2f pos)
 {
 	Movable = false;
 	Font = textfont;
-	Scale = 1.0f;	//change for hdr (approx. 0.5f) test for this - change this (may)
+	Scale = 0.25f;	//change for hdr (approx. 0.5f) test for this - change this (may)
 	Text.setString("Me ..the Destroyer");		//if we want to rename bullet to damage taker, we can write bullet, grenade so on
 	Text.setFont(Font);
 	Name = name;

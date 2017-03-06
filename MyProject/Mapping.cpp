@@ -1,4 +1,5 @@
 #include "Mapping.h"
+#include "World.h"
 #include <fstream>
 #include <iostream>
 using namespace std;
@@ -65,7 +66,8 @@ void Mapping::mapping()
 	}
 
 	outFile.close();
-
+	/*World world;
+	world.setWorld(world);*/
 }
 
 
