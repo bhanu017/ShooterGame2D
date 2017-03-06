@@ -16,7 +16,6 @@ public:
 	bool IsWalking = false;
 	std::string Name;
 	int Health;
-	sf::Vector2f PrevPos;
 	Weapon *CurrentWeapon;
 	Weapon *OtherWeapon;
 	std::string LastDamager;

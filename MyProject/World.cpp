@@ -12,16 +12,17 @@ World::World()
 	inFile >> x_tiles;
 	inFile >> y_tiles;
 	int a, b;
+	TileSize = 20.0f;
 
-	tile_index.resize(y_tiles);
-	for (int i = 0; i < y_tiles; i++)
+	tile_index.resize(x_tiles);
+	for (int i = 0; i < x_tiles; i++)
 	{
-		tile_index[i].resize(x_tiles);
+		tile_index[i].resize(y_tiles);
 	}
 
-	for (int j = 0; j < y_tiles; j++)
+	for (int j = 0; j < x_tiles; j++)
 	{
-		for (int i = 0; i < x_tiles; i++)
+		for (int i = 0; i < y_tiles; i++)
 		{
 
 			inFile >> a >> b >> tile_index[i][j];

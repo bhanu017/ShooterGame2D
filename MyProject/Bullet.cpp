@@ -17,6 +17,7 @@ Bullet::Bullet(float scale, std::string player, sf::Font textfont, sf::Vector2f 
 	}
 	Sprite.setTexture(Texture);
 	Sprite.setTextureRect(sf::IntRect(0, 0, TextureSize.x, TextureSize.y));
+	Sprite.setOrigin(TextureSize.x / 2, TextureSize.y / 2);
 	Sprite.setScale(sf::Vector2f(Scale, Scale));
 	Speed = 100.0f;
 	StartPos = startpos;
