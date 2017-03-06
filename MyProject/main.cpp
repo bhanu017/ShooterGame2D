@@ -2,13 +2,21 @@
 #include "Player.h"
 #include "Menu.h"
 #include "Mapping.h"
+#include "World.h"
 #include <string>
+#include <fstream>
+#include "Collision.h"
 
 using namespace std;
+
 int main()
 {
 	int windowHeight = 640; /*Vertical length*/
 	int windowWidth = 640; /*Horizontal length*/
+	ifstream inFile;
+	inFile.open("map.txt");
+	
+
 	sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight), "FunShooter", sf::Style::Default);/**/
 	bool fullscreen = false;
 	Menu menu(window.getSize().x, window.getSize().y);
@@ -104,7 +112,8 @@ int main()
 		sf::Sprite bgSprite;
 		bgSprite.setTexture(background);
 		bgSprite.setTextureRect(sf::IntRect(0, 0, windowWidth, windowHeight));/**/
-		Mapping::mapping();
+		Mapping::mapping();			// creates the map.txt and map here.
+		World world;
 
 		Player player(name, font);
 		vector<Weapon *> unacquiredWeapons;
@@ -159,7 +168,9 @@ int main()
 			/*if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
 				cout << "Pressed" << endl;
 			}*/
+
 			window.clear();
+			
 			//window.draw(shape);
 			window.draw(bgSprite);
 			/*Draw Health Bar*/
@@ -174,7 +185,9 @@ int main()
 			window.draw(nitrostatus);
 			window.draw(nitrobar);
 			/*Draw Nitro Bar*/
-			player.update(window);
+			
+			player.update(window, world);
+			
 			for (int i = 0; i < releasedBullets.size(); i++) {		//WORK here. we need to damage the player if it passes
 				//through the player and destroy the bullet
 				releasedBullets[i]->update();
@@ -189,7 +202,9 @@ int main()
 			}
 			//player_view.setCenter(player.Sprite.getPosition());
 			//window.setView(player_view);
+			
 			player.draw(window);
+			
 			if (isfiring) {
 				window.draw(Spark);
 			}
