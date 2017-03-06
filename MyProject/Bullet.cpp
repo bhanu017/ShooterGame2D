@@ -34,7 +34,8 @@ Bullet::~Bullet()
 
 void Bullet::update()
 {
-	Sprite.move(Speed*cos(Angle*PI / 180), Speed*sin(Angle*PI / 180));	
+	Sprite.move(Speed*cos(Angle*PI / 180), Speed*sin(Angle*PI / 180));// check for collision of bullet.
+
 	Text.setString(std::to_string(Angle));
 	//Destroyer Condition
 }
