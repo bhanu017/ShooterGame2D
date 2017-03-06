@@ -3,6 +3,7 @@
 #include "Weapon.h"
 #include <string>
 #include <vector>
+#include "World.h"
 
 class Player : public GameObject
 {
@@ -20,7 +21,7 @@ public:
 	Weapon *OtherWeapon;
 	std::string LastDamager;
 	int Nitro;
-	void update(sf::RenderWindow &window);
+	void update(sf::RenderWindow &window, World &world);
 	void releaseWeapon(std::vector<Weapon *> &unacquired);
 	void acquireweapon(std::vector<Weapon*>& unacquired);
 	void changeweapon();

@@ -3,6 +3,8 @@
 #include <math.h>
 #include "Player.h"
 #include <string>
+#include "Collision.h"
+#include "Resolver.h"
 
 #define PI 3.14159265
 
@@ -10,11 +12,12 @@
 
 Player::Player(std::string &name, sf::Font textfont)
 {
+	sf::Vector2i sizeOfTile = sf::Vector2i(20, 20);
 	Movable = true;
 	TextureSize = sf::Vector2i(95, 154);	//164, 265 for hdr
 	TextureFlySize = sf::Vector2i(101, 222);	//174, 382 for hdr
 	Font = textfont;
-	Scale = 1.0f;	//change for hdr (approx. 0.5f) test for this
+	Scale = 0.25f;	//change for hdr (approx. 0.5f) test for this
 	Name = name;
 	Text.setString(name);
 	Text.setFont(Font);
@@ -55,7 +58,7 @@ Player::~Player()
 {
 }
 
-void Player::update(sf::RenderWindow &window)
+void Player::update(sf::RenderWindow &window, World &world)
 {
 	bool hflying = false;
 	bool vflying = false;
@@ -73,7 +76,13 @@ void Player::update(sf::RenderWindow &window)
 			Nitro = 20;
 		}
 		else Nitro -= 8;
-		this->Sprite.move(0, VSpeed / 30 + 0.5f*(JetForce + GForce)*(1 / 900));
+		this->Sprite.move(0, VSpeed / 30 + 0.5f*(JetForce + GForce)*(1 / 900));// check for collision after this.
+		//
+		if (Collision::PlayerWall(window, this, world))
+		{
+			Resolver::CollisionResolver(window, this, world);
+		}
+
 		VSpeed = VSpeed + (JetForce + GForce) / 30;
 		if (VSpeed < -SpeedLimit*0.9f) VSpeed = pVSpeed;
 		if (!pIsFlying) Sprite.setTexture(TextureFly);
@@ -92,7 +101,12 @@ void Player::update(sf::RenderWindow &window)
 			JetForce = 0;
 		}
 		else Nitro -= 8;
-		this->Sprite.move(0, VSpeed / 30 + 0.5f*(-JetForce + GForce)*(1 / 900));
+		this->Sprite.move(0, VSpeed / 30 + 0.5f*(-JetForce + GForce)*(1 / 900)); // Check for collision after this
+			if (Collision::PlayerWall(window, this, world))
+			{
+				Resolver::CollisionResolver(window, this, world);
+			}
+
 		VSpeed = VSpeed + (-JetForce + GForce) / 30;
 		if (VSpeed > SpeedLimit) VSpeed = pVSpeed;
 		if (!pIsFlying) Sprite.setTexture(TextureFly);
@@ -120,6 +134,10 @@ void Player::update(sf::RenderWindow &window)
 		}
 		HSpeed = -abs(HSpeed);
 		this->Sprite.move(HSpeed / 30, VSpeed / 30 + 0.5f*(GForce)*(1 / 900));
+		if (Collision::PlayerWall(window, this, world))
+		{
+			Resolver::CollisionResolver(window, this, world);
+		}
 		VSpeed = VSpeed + (GForce) / 30;
 		if (VSpeed > SpeedLimit) VSpeed = pVSpeed;
 		if (!IsFlying) Sprite.setTexture(TextureFly);
@@ -157,6 +175,10 @@ void Player::update(sf::RenderWindow &window)
 		}
 		HSpeed = abs(HSpeed);
 		this->Sprite.move(HSpeed / 30, VSpeed / 30 + 0.5f*(GForce)*(1 / 900));
+		if (Collision::PlayerWall(window, this, world))
+		{
+			Resolver::CollisionResolver(window, this, world);
+		}
 		VSpeed = VSpeed + (GForce) / 30;
 		if (VSpeed > SpeedLimit) VSpeed = pVSpeed;
 		if (!IsFlying) Sprite.setTexture(TextureFly);
@@ -185,6 +207,10 @@ void Player::update(sf::RenderWindow &window)
 		else IsWalking = true;
 		Speed = -abs(Speed);
 		this->Sprite.move(Speed / 30, VSpeed / 30 + 0.5f*(GForce)*(1 / 900));
+		if (Collision::PlayerWall(window, this, world))
+		{
+			Resolver::CollisionResolver(window, this, world);
+		}
 		VSpeed = VSpeed + (GForce) / 30;
 		if (VSpeed > SpeedLimit) VSpeed = pVSpeed;
 		if (!IsFlying) Sprite.setTexture(Texture);
@@ -212,6 +238,10 @@ void Player::update(sf::RenderWindow &window)
 		else IsWalking = true;
 		Speed = abs(Speed);
 		this->Sprite.move(Speed / 30, VSpeed / 30 + 0.5f*(GForce)*(1 / 900));
+		if (Collision::PlayerWall(window, this, world))
+		{
+			Resolver::CollisionResolver(window, this, world);
+		}
 		VSpeed = VSpeed + (GForce) / 30;
 		if (VSpeed > SpeedLimit) VSpeed = pVSpeed;
 		if (!IsFlying) Sprite.setTexture(Texture);
@@ -230,7 +260,13 @@ void Player::update(sf::RenderWindow &window)
 	}
 
 	if (!IsFlying && !IsWalking) {
-		this->Sprite.move(0, VSpeed / 30 + 0.5f*(GForce)*(1 / 900));
+		this->Sprite.move(0, VSpeed / 30 + 0.5f*(GForce)*(1 / 900)); // Check for collision
+
+		if (Collision::PlayerWall(window, this, world))
+		{
+			Resolver::CollisionResolver(window, this, world);
+		}
+
 		VSpeed = VSpeed + (GForce) / 30;
 		if (VSpeed > SpeedLimit) VSpeed = pVSpeed;
 		if (pIsFlying) Sprite.setTexture(Texture);
