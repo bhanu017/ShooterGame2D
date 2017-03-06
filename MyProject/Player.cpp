@@ -9,6 +9,7 @@
 #define PI 3.14159265
 
 
+//using namespace std;
 
 Player::Player(std::string &name, sf::Font textfont)
 {
@@ -34,6 +35,7 @@ Player::Player(std::string &name, sf::Font textfont)
 	Sprite.setTexture(Texture);
 	Sprite.setTextureRect(sf::IntRect(0,0, TextureSize.x, TextureSize.y));
 	Sprite.setScale(sf::Vector2f(Scale, Scale));
+	Sprite.setOrigin(TextureSize.x / 2, TextureSize.y / 2);
 	Health = 100;
 	Nitro = 2000;
 	HSpeedWalk = 90.0f;
@@ -69,7 +71,7 @@ void Player::update(sf::RenderWindow &window, World &world)
 	bool pIsFlying = IsFlying;
 	IsFlying = false;
 	IsWalking = false;
-	PrevPos = Sprite.getPosition();
+	sf::Vector2f PrevPos;
 	HSpeed = 0.0f;
 	if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) || (sf::Keyboard::isKeyPressed(sf::Keyboard::W))) {
 		IsFlying = true;
@@ -78,21 +80,24 @@ void Player::update(sf::RenderWindow &window, World &world)
 			Nitro = 20;
 		}
 		else Nitro -= 8;
-		this->Sprite.move(0, VSpeed / 30 + 0.5f*(JetForce + GForce)*(1 / 900));// check for collision after this.
-		//
+		PrevPos = Sprite.getPosition();
+		this->Sprite.move(0.0f, VSpeed / 30 + 0.5f*(JetForce + GForce)*(1 / 900));// check for collision after this.
+		Collision::resolveBounds(window, this, world);
 		if (Collision::PlayerWall(window, this, world))
 		{
-			Resolver::CollisionResolver(window, this, world);
+			Sprite.setPosition(PrevPos);
+			VSpeed = 0.0f;
 		}
-
-		VSpeed = VSpeed + (JetForce + GForce) / 30;
-		if (VSpeed < -SpeedLimit*0.9f) VSpeed = pVSpeed;
+		else {
+			VSpeed = VSpeed + (JetForce + GForce) / 30;
+			if (VSpeed < -SpeedLimit*0.9f) VSpeed = pVSpeed;
+		}
 		if (!pIsFlying) Sprite.setTexture(TextureFly);
 		TextureCounter = (TextureCounter + 15) % 16;
 		if (sf::Mouse::getPosition(window).x > Sprite.getPosition().x) this->Sprite.setTextureRect(sf::IntRect((TextureCounter / 4)*TextureFlySize.x + 5, 0, TextureFlySize.x, TextureFlySize.y));	// +9 or 10 for hdr
 		else this->Sprite.setTextureRect(sf::IntRect((TextureCounter / 4 + 1)*TextureFlySize.x + 5, 0, -TextureFlySize.x, TextureFlySize.y));	// +9 or 10 for hdr
-		Sprite.setOrigin(TextureFlySize.x / 2, TextureSize.y / 2);
-		Sprite.setScale(sf::Vector2f(Scale, Scale));
+		if (!pIsFlying) Sprite.setOrigin(TextureFlySize.x / 2, TextureSize.y / 2);
+		if (!pIsFlying) Sprite.setScale(sf::Vector2f(Scale, Scale));
 		Sprite.setRotation(0);
 		JetForce = temp;
 	}
@@ -103,19 +108,24 @@ void Player::update(sf::RenderWindow &window, World &world)
 			JetForce = 0;
 		}
 		else Nitro -= 8;
-		this->Sprite.move(0, VSpeed / 30 + 0.5f*(-JetForce + GForce)*(1 / 900)); // Check for collision after this
+		PrevPos = Sprite.getPosition();
+		this->Sprite.move(0.0f, VSpeed / 30 + 0.5f*(-JetForce + GForce)*(1 / 900)); // Check for collision after this
+		Collision::resolveBounds(window, this, world);
 			if (Collision::PlayerWall(window, this, world))
 			{
-				Resolver::CollisionResolver(window, this, world);
+				Sprite.setPosition(PrevPos);
+				VSpeed = 0.0f;
 			}
-		VSpeed = VSpeed + (-JetForce + GForce) / 30;
-		if (VSpeed > SpeedLimit) VSpeed = pVSpeed;
+			else {
+				VSpeed = VSpeed + (-JetForce + GForce) / 30;
+				if (VSpeed > SpeedLimit) VSpeed = pVSpeed;
+			}
 		if (!pIsFlying) Sprite.setTexture(TextureFly);
 		TextureCounter = (TextureCounter + 15) % 16;
 		if (sf::Mouse::getPosition(window).x > Sprite.getPosition().x) this->Sprite.setTextureRect(sf::IntRect((TextureCounter / 4 + 1)*TextureFlySize.x + 5, 0, -TextureFlySize.x, TextureFlySize.y));	// +9 or 10 for hdr
 		else this->Sprite.setTextureRect(sf::IntRect((TextureCounter / 4)*TextureFlySize.x + 5, 0, TextureFlySize.x, TextureFlySize.y));	// +9 or 10 for hdr
-		Sprite.setOrigin(TextureFlySize.x / 2, TextureSize.y / 2);
-		Sprite.setScale(sf::Vector2f(Scale, Scale));
+		if (!pIsFlying) Sprite.setOrigin(TextureFlySize.x / 2, TextureSize.y / 2);
+		if (!pIsFlying) Sprite.setScale(sf::Vector2f(Scale, Scale));
 		Sprite.setRotation(180);
 		JetForce = temp;
 	}
@@ -127,38 +137,43 @@ void Player::update(sf::RenderWindow &window, World &world)
 		}
 		else Nitro -= 8;
 		if (IsFlying) {
-			temp = GForce;
-			temp3 = VSpeed;
-			GForce = 0;
-			VSpeed = 0;
 			Nitro += 4;
 		}
 		HSpeed = -HSpeedFly;
-		this->Sprite.move(HSpeed / 30, VSpeed / 30 + 0.5f*(GForce)*(1 / 900));
+		PrevPos = Sprite.getPosition();
+		this->Sprite.move(HSpeed / 30, 0.0f);
+		Collision::resolveBounds(window, this, world);
 		if (Collision::PlayerWall(window, this, world))
 		{
-			Resolver::CollisionResolver(window, this, world);
+			Sprite.setPosition(PrevPos);
+			HSpeed = 0.0f;
 		}
-		VSpeed = VSpeed + (GForce) / 30;
-		if (VSpeed > SpeedLimit) VSpeed = pVSpeed;
-		if (!IsFlying) Sprite.setTexture(TextureFly);
-		if (!IsFlying) TextureCounter = (TextureCounter + 15) % 16;
 		if (!IsFlying) {
+			PrevPos = Sprite.getPosition();
+			this->Sprite.move(0.0f, VSpeed / 30 + 0.5f*(GForce)*(1 / 900));
+			Collision::resolveBounds(window, this, world);
+			if (Collision::PlayerWall(window, this, world))
+			{
+				Sprite.setPosition(PrevPos);
+				VSpeed = 0.0f;
+			}
+			else {
+				VSpeed = VSpeed + (GForce) / 30;
+				if (VSpeed > SpeedLimit) VSpeed = pVSpeed;
+			}
+			Sprite.setTexture(TextureFly);
+			TextureCounter = (TextureCounter + 15) % 16;
 			if (sf::Mouse::getPosition(window).x > Sprite.getPosition().x) this->Sprite.setTextureRect(sf::IntRect((TextureCounter / 4)*TextureFlySize.x + 5, 0, TextureFlySize.x, TextureFlySize.y)); // +9 or 10 for hdr
 			else this->Sprite.setTextureRect(sf::IntRect((TextureCounter / 4)*TextureFlySize.x + 5, 0, TextureFlySize.x, TextureFlySize.y)); // +9 or 10 for hdr
+			Sprite.setOrigin(TextureFlySize.x / 2, TextureSize.y / 2);
+			Sprite.setScale(sf::Vector2f(Scale, Scale));
 		}
-		Sprite.setOrigin(TextureFlySize.x / 2, TextureSize.y / 2);
-		if (!IsFlying) Sprite.setScale(sf::Vector2f(Scale, Scale));
 		int temp2 = Sprite.getRotation();
 		if (temp2 == 0) temp2 = 360;
 		if (IsFlying) Sprite.setRotation((temp2 + 270) / 2);
 		else Sprite.setRotation(-90);
-		if (IsFlying) {
-			GForce = temp;
-			VSpeed = temp3;
-		}
 		IsFlying = true;
-
+		JetForce = temp;
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
 		hflying = true;
@@ -168,114 +183,132 @@ void Player::update(sf::RenderWindow &window, World &world)
 		}
 		else Nitro -= 8;
 		if (IsFlying) {
-			temp = GForce;
-			temp3 = VSpeed;
-			GForce = 0;
-			VSpeed = 0;
 			Nitro += 4;
 		}
 		HSpeed = HSpeedFly;
-		this->Sprite.move(HSpeed / 30, VSpeed / 30 + 0.5f*(GForce)*(1 / 900));
+		PrevPos = Sprite.getPosition();
+		this->Sprite.move(HSpeed / 30, 0.0f);
+		Collision::resolveBounds(window, this, world);
 		if (Collision::PlayerWall(window, this, world))
 		{
-			Resolver::CollisionResolver(window, this, world);
+			Sprite.setPosition(PrevPos);
+			HSpeed = 0.0f;
 		}
-		VSpeed = VSpeed + (GForce) / 30;
-		if (VSpeed > SpeedLimit) VSpeed = pVSpeed;
-		if (!IsFlying) Sprite.setTexture(TextureFly);
-		if (!IsFlying) TextureCounter = (TextureCounter + 1) % 16;
 		if (!IsFlying) {
+			PrevPos = Sprite.getPosition();
+			this->Sprite.move(0.0f, VSpeed / 30 + 0.5f*(GForce)*(1 / 900));
+			Collision::resolveBounds(window, this, world);
+			if (Collision::PlayerWall(window, this, world))
+			{
+				Sprite.setPosition(PrevPos);
+				VSpeed = 0.0f;
+			}
+			else {
+				VSpeed = VSpeed + (GForce) / 30;
+				if (VSpeed > SpeedLimit) VSpeed = pVSpeed;
+			}
+			Sprite.setTexture(TextureFly);
+			TextureCounter = (TextureCounter + 1) % 16;
 			if (sf::Mouse::getPosition(window).x > Sprite.getPosition().x) this->Sprite.setTextureRect(sf::IntRect((TextureCounter / 4)*TextureFlySize.x + 5, 0, TextureFlySize.x, TextureFlySize.y)); // +9 or 10 for hdr
 			else this->Sprite.setTextureRect(sf::IntRect((TextureCounter / 4)*TextureFlySize.x + 5, 0, TextureFlySize.x, TextureFlySize.y)); // +9 or 10 for hdr
+			Sprite.setOrigin(TextureFlySize.x / 2, TextureSize.y / 2);
+			if (!IsFlying) Sprite.setScale(sf::Vector2f(Scale, Scale));
 		}
-		Sprite.setOrigin(TextureFlySize.x / 2, TextureSize.y / 2);
-		if (!IsFlying) Sprite.setScale(sf::Vector2f(Scale, Scale));
 		if (IsFlying) Sprite.setRotation((Sprite.getRotation() + 90) / 2);
 		else Sprite.setRotation(90);
-		if (IsFlying) {
-			GForce = temp;
-			VSpeed = temp3;
-		}
 		IsFlying = true;
+		JetForce = temp;
 	}
 	if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) && (!hflying)) {
-		if (IsFlying) {
-			temp = GForce;
-			temp3 = VSpeed;
-			GForce = 0;
-			VSpeed = 0;
-		}
-		else IsWalking = true;
+		IsWalking = true;
 		HSpeed = -HSpeedWalk;
-		this->Sprite.move(HSpeed / 30, VSpeed / 30 + 0.5f*(GForce)*(1 / 900));
+		PrevPos = Sprite.getPosition();
+		this->Sprite.move(HSpeed / 30, 0.0f);
+		Collision::resolveBounds(window, this, world);
 		if (Collision::PlayerWall(window, this, world))
 		{
-			Resolver::CollisionResolver(window, this, world);
+			Sprite.setPosition(PrevPos);
+			HSpeed = 0.0f;
 		}
-		VSpeed = VSpeed + (GForce) / 30;
-		if (VSpeed > SpeedLimit) VSpeed = pVSpeed;
-		if (!IsFlying) Sprite.setTexture(Texture);
-		if (!IsFlying) TextureCounter = (TextureCounter + 15) % 16;
 		if (!IsFlying) {
+			PrevPos = Sprite.getPosition();
+			this->Sprite.move(0.0f, VSpeed / 30 + 0.5f*(GForce)*(1 / 900));
+			Collision::resolveBounds(window, this, world);
+			if (Collision::PlayerWall(window, this, world))
+			{
+				Sprite.setPosition(PrevPos);
+				VSpeed = 0.0f;
+			}
+			else {
+				VSpeed = VSpeed + (GForce) / 30;
+				if (VSpeed > SpeedLimit) VSpeed = pVSpeed;
+			}
+			Sprite.setTexture(Texture);
+			TextureCounter = (TextureCounter + 15) % 16;
 			if (sf::Mouse::getPosition(window).x > Sprite.getPosition().x) this->Sprite.setTextureRect(sf::IntRect((TextureCounter / 4)*TextureSize.x, 0, TextureSize.x, TextureSize.y));
 			else this->Sprite.setTextureRect(sf::IntRect((TextureCounter / 4 + 1)*TextureSize.x, 0, -TextureSize.x, TextureSize.y));
-		}
-			if (!IsFlying) Sprite.setOrigin(TextureSize.x / 2, TextureSize.y / 2);
-		if (!IsFlying) Sprite.setScale(sf::Vector2f(Scale, Scale));
-		if (!IsFlying) Sprite.setRotation(0);
+			Sprite.setOrigin(TextureSize.x / 2, TextureSize.y / 2);
+			Sprite.setScale(sf::Vector2f(Scale, Scale));
+			Sprite.setRotation(0);
 
-		if (IsFlying) {
-			GForce = temp;
-			VSpeed = temp3;
 		}
 	}
 	else if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) && (!hflying)) {
-		if (IsFlying) {
-			temp = GForce;
-			temp3 = VSpeed;
-			GForce = 0;
-			VSpeed = 0;
-		}
-		else IsWalking = true;
+		IsWalking = true;
 		HSpeed = HSpeedWalk;
-		this->Sprite.move(HSpeed / 30, VSpeed / 30 + 0.5f*(GForce)*(1 / 900));
+		PrevPos = Sprite.getPosition();
+		this->Sprite.move(HSpeed / 30, 0.0f);
 		if (Collision::PlayerWall(window, this, world))
 		{
-			Resolver::CollisionResolver(window, this, world);
+			Sprite.setPosition(PrevPos);
+			HSpeed = 0.0f;
 		}
-		VSpeed = VSpeed + (GForce) / 30;
-		if (VSpeed > SpeedLimit) VSpeed = pVSpeed;
-		if (!IsFlying) Sprite.setTexture(Texture);
-		if (!IsFlying) TextureCounter = (TextureCounter + 1) % 16;
 		if (!IsFlying) {
+			PrevPos = Sprite.getPosition();
+			this->Sprite.move(0.0f, VSpeed / 30 + 0.5f*(GForce)*(1 / 900));
+			Collision::resolveBounds(window, this, world);
+			if (Collision::PlayerWall(window, this, world))
+			{
+				Sprite.setPosition(PrevPos);
+				VSpeed = 0.0f;
+			}
+			else {
+				VSpeed = VSpeed + (GForce) / 30;
+				if (VSpeed > SpeedLimit) VSpeed = pVSpeed;
+			}
+			Sprite.setTexture(Texture);
+			TextureCounter = (TextureCounter + 1) % 16;
 			if (sf::Mouse::getPosition(window).x > Sprite.getPosition().x) this->Sprite.setTextureRect(sf::IntRect((TextureCounter / 4)*TextureSize.x, 0, TextureSize.x, TextureSize.y));
 			else this->Sprite.setTextureRect(sf::IntRect((TextureCounter / 4 + 1)*TextureSize.x, 0, -TextureSize.x, TextureSize.y));
-		}
-		if (!IsFlying) Sprite.setOrigin(TextureSize.x / 2, TextureSize.y / 2);
-		if (!IsFlying) Sprite.setScale(sf::Vector2f(Scale, Scale));
-		if (!IsFlying) Sprite.setRotation(0);
-		if (IsFlying) {
-			GForce = temp;
-			VSpeed = temp3;
+			Sprite.setOrigin(TextureSize.x / 2, TextureSize.y / 2);
+			Sprite.setScale(sf::Vector2f(Scale, Scale));
+			Sprite.setRotation(0);
 		}
 	}
 
 	if (!IsFlying && !IsWalking) {
-		this->Sprite.move(0, VSpeed / 30 + 0.5f*(GForce)*(1 / 900)); // Check for collision
-
+		PrevPos = Sprite.getPosition();
+		this->Sprite.move(0.0f, VSpeed / 30 + 0.5f*(GForce)*(1 / 900)); // Check for collision
+		Collision::resolveBounds(window, this, world);
 		if (Collision::PlayerWall(window, this, world))
 		{
-			Resolver::CollisionResolver(window, this, world);
+			Sprite.setPosition(PrevPos);
+			VSpeed = 0.0f;
 		}
-
-		VSpeed = VSpeed + (GForce) / 30;
-		if (VSpeed > SpeedLimit) VSpeed = pVSpeed;
-		if (pIsFlying) Sprite.setTexture(Texture);
+		else {
+			VSpeed = VSpeed + (GForce) / 30;
+			if (VSpeed > SpeedLimit) VSpeed = pVSpeed;
+		}
+		if (pIsFlying) {
+			Sprite.setTexture(Texture);
+		}
 		if (sf::Mouse::getPosition(window).x > Sprite.getPosition().x) this->Sprite.setTextureRect(sf::IntRect((TextureCounter / 4)*TextureSize.x, 0, TextureSize.x, TextureSize.y));
 		else this->Sprite.setTextureRect(sf::IntRect((TextureCounter / 4 + 1)*TextureSize.x, 0, -TextureSize.x, TextureSize.y));
-		if (!IsFlying) Sprite.setOrigin(TextureSize.x / 2, TextureSize.y / 2);
-		if (!IsFlying) Sprite.setScale(sf::Vector2f(Scale, Scale));
-		if (!IsFlying) Sprite.setRotation(0);
+		if (pIsFlying) {
+			Sprite.setScale(sf::Vector2f(Scale, Scale));
+			Sprite.setOrigin(TextureSize.x / 2, TextureSize.y / 2);
+			Sprite.setRotation(0);
+		}
 	}
 	Text.setPosition(Sprite.getPosition());
 	Text.move(sf::Vector2f(Scale*TextureSize.x / 4, Scale*TextureSize.y / 2));
@@ -332,5 +365,6 @@ void Player::changeweapon()
 void Player::draw(sf::RenderWindow & window) {
 	if (CurrentWeapon != NULL) window.draw(focusline);
 	window.draw(this->Sprite);
+	Text.setCharacterSize(25);
 	window.draw(this->Text);
 }

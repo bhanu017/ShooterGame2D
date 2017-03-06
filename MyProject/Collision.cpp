@@ -55,10 +55,10 @@ bool Collision::PlayerWall(sf::RenderWindow &window, Player *player, World &worl
 		return true;
 	}*/
 
-	int x_tile = (player->Sprite.getPosition().x) / 20;
-	int y_tile = (player->Sprite.getPosition().y) / 20;
+	int x_tile = (player->Sprite.getPosition().x) / world.TileSize;
+	int y_tile = (player->Sprite.getPosition().y) / world.TileSize;
 
-	if (x_tile < 0 || x_tile > 31)
+	/*if (x_tile < 0 || x_tile > 31)
 	{
 		//std::cout << "Out!! \n" ;
 		return true;
@@ -68,14 +68,76 @@ bool Collision::PlayerWall(sf::RenderWindow &window, Player *player, World &worl
 		//std::cout << "Out!! \n";
 		return true;
 	}
+	*/
 
 	if (world.tile_index[x_tile][y_tile] == 1)
 	{
 		return true;
 	}
-	else
+	if (x_tile - 1 >= 0) {
+		if (y_tile - 1 >= 0) {
+			if (world.tile_index[x_tile - 1][y_tile - 1] == 1) {
+				if (player->Sprite.getGlobalBounds().intersects(sf::Rect<float>::Rect((x_tile - 1)*world.TileSize, (y_tile - 1)*world.TileSize, world.TileSize, world.TileSize))) return true;
+			}
+		}
+		if (y_tile + 1 <= 31) {
+			if (world.tile_index[x_tile - 1][y_tile + 1] == 1) {
+				if (player->Sprite.getGlobalBounds().intersects(sf::Rect<float>::Rect((x_tile - 1)*world.TileSize, (y_tile + 1)*world.TileSize, world.TileSize, world.TileSize))) return true;
+			}
+		}
+		if (world.tile_index[x_tile - 1][y_tile] == 1) {
+			if (player->Sprite.getGlobalBounds().intersects(sf::Rect<float>::Rect((x_tile - 1)*world.TileSize, y_tile*world.TileSize, world.TileSize, world.TileSize))) return true;
+		}
+	}
+	if (x_tile + 1 <= 31) {
+		if (y_tile - 1 >= 0) {
+			if (world.tile_index[x_tile + 1][y_tile - 1] == 1) {
+				if (player->Sprite.getGlobalBounds().intersects(sf::Rect<float>::Rect((x_tile+ 1)*world.TileSize, (y_tile - 1)*world.TileSize, world.TileSize, world.TileSize))) return true;
+			}
+		}
+		if (y_tile + 1 <= 31) {
+			if (world.tile_index[x_tile + 1][y_tile + 1] == 1) {
+				if (player->Sprite.getGlobalBounds().intersects(sf::Rect<float>::Rect((x_tile + 1)*world.TileSize, (y_tile + 1)*world.TileSize, world.TileSize, world.TileSize))) return true;
+			}
+		}
+		if (world.tile_index[x_tile + 1][y_tile] == 1) {
+			if (player->Sprite.getGlobalBounds().intersects(sf::Rect<float>::Rect((x_tile + 1)*world.TileSize, y_tile*world.TileSize, world.TileSize, world.TileSize))) return true;
+		}
+	}
+	if (y_tile - 1 >= 0) {
+		if (world.tile_index[x_tile][y_tile - 1] == 1) {
+			if (player->Sprite.getGlobalBounds().intersects(sf::Rect<float>::Rect(x_tile*world.TileSize, (y_tile - 1)*world.TileSize, world.TileSize, world.TileSize))) return true;
+		}
+	}
+	if (y_tile + 1 <= 31) {
+		if (world.tile_index[x_tile][y_tile + 1] == 1) {
+			if (player->Sprite.getGlobalBounds().intersects(sf::Rect<float>::Rect(x_tile*world.TileSize, (y_tile + 1)*world.TileSize, world.TileSize, world.TileSize))) return true;
+		}
+	}
+	return false;
+}
+
+void Collision::resolveBounds(sf::RenderWindow & window, Player * player, World & world)
+{
+	if (player->Sprite.getPosition().x < 0.0f)
 	{
-		return false;
+		player->Sprite.setPosition(sf::Vector2f(0.0f, player->Sprite.getPosition().y));
+		//player->VSpeed = 0;
+	}
+	else if (player->Sprite.getPosition().x >= 640.0f)
+	{
+		player->Sprite.setPosition(sf::Vector2f(639.0f, player->Sprite.getPosition().y));
+		//player->VSpeed = 0;
+	}
+	if (player->Sprite.getPosition().y >= 640.0f)
+	{
+		player->Sprite.setPosition(sf::Vector2f(player->Sprite.getPosition().x, 639.0f));
+		player->VSpeed = 0;
+	}
+	else if (player->Sprite.getPosition().y < 0.0f)
+	{
+		player->Sprite.setPosition(sf::Vector2f(player->Sprite.getPosition().x, 0.0f));
+		player->VSpeed = 0;
 	}
 }
 

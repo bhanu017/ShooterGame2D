@@ -12,7 +12,7 @@ public:
 
 	//void setWorld(World world);
 	static bool PlayerWall(sf::RenderWindow &window, Player *player, World &world);
-	static bool PlayerBullet();
+	static void resolveBounds(sf::RenderWindow &window, Player *player, World &world);
 	static bool BulletWall();
 };
 

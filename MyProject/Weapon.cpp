@@ -107,54 +107,60 @@ bool Weapon::fire(std::string pname, std::vector<Bullet *> &list, sf::RenderWind
 			if (sf::Mouse::getPosition(window).x >= Sprite.getPosition().x) {
 				Spark.setTextureRect(sf::IntRect(38, 0, -38, 25));
 				Spark.setOrigin(0, 25 / 2);
+				Spark.setScale(Scale, Scale);
 				Spark.setPosition(sf::Vector2f(Sprite.getPosition().x + cos(PI*Angle / 180) * (85.0f - Sprite.getOrigin().x), Sprite.getPosition().y + sin(PI*Angle / 180) *(85.0f - Sprite.getOrigin().x)));
 				Spark.setRotation(Angle);
-				list.push_back(new Bullet(1.2f, pname, Font, sf::Vector2f(Sprite.getPosition().x + cos(PI*Angle / 180) * (85.0f - Sprite.getOrigin().x), Sprite.getPosition().y + sin(PI*Angle / 180) * (85.0f - Sprite.getOrigin().x)), Angle - 15));
-				list.push_back(new Bullet(1.2f, pname, Font, sf::Vector2f(Sprite.getPosition().x + cos(PI*Angle / 180) *(85.0f - Sprite.getOrigin().x), Sprite.getPosition().y +sin(PI*Angle / 180) * (85.0f - Sprite.getOrigin().x)), Angle - 5));
-				list.push_back(new Bullet(1.2f, pname, Font, sf::Vector2f(Sprite.getPosition().x + cos(PI*Angle / 180) * (85.0f - Sprite.getOrigin().x), Sprite.getPosition().y + sin(PI*Angle / 180) * (85.0f - Sprite.getOrigin().x)), Angle + 5));
-				list.push_back(new Bullet(1.2f, pname, Font, sf::Vector2f(Sprite.getPosition().x + cos(PI*Angle / 180) * (85.0f - Sprite.getOrigin().x), Sprite.getPosition().y + sin(PI*Angle / 180) *(85.0f - Sprite.getOrigin().x)), Angle + 15));
+				list.push_back(new Bullet(Scale, pname, Font, sf::Vector2f(Sprite.getPosition().x + cos(PI*Angle / 180) * (85.0f - Sprite.getOrigin().x), Sprite.getPosition().y + sin(PI*Angle / 180) * (85.0f - Sprite.getOrigin().x)), Angle - 15));
+				list.push_back(new Bullet(Scale, pname, Font, sf::Vector2f(Sprite.getPosition().x + cos(PI*Angle / 180) *(85.0f - Sprite.getOrigin().x), Sprite.getPosition().y +sin(PI*Angle / 180) * (85.0f - Sprite.getOrigin().x)), Angle - 5));
+				list.push_back(new Bullet(Scale, pname, Font, sf::Vector2f(Sprite.getPosition().x + cos(PI*Angle / 180) * (85.0f - Sprite.getOrigin().x), Sprite.getPosition().y + sin(PI*Angle / 180) * (85.0f - Sprite.getOrigin().x)), Angle + 5));
+				list.push_back(new Bullet(Scale, pname, Font, sf::Vector2f(Sprite.getPosition().x + cos(PI*Angle / 180) * (85.0f - Sprite.getOrigin().x), Sprite.getPosition().y + sin(PI*Angle / 180) *(85.0f - Sprite.getOrigin().x)), Angle + 15));
 			}
 			else {
 				Spark.setTextureRect(sf::IntRect(0, 0, 38, 25));
 				Spark.setOrigin(38, 25 / 2);
+				Spark.setScale(Scale, Scale);
 				Spark.setPosition(sf::Vector2f(Sprite.getPosition().x - cos(PI*Angle / 180) * (Sprite.getOrigin().x - 15.0f), Sprite.getPosition().y - sin(PI*Angle / 180) * (Sprite.getOrigin().x - 15.0f)));
 				Spark.setRotation(Angle);
-				list.push_back(new Bullet(1.2f, pname, Font, sf::Vector2f(Sprite.getPosition().x - cos(PI*Angle / 180) * (Sprite.getOrigin().x - 15.0f), Sprite.getPosition().y - sin(PI*Angle / 180) * (Sprite.getOrigin().x - 15.0f)), Angle - 15 + 180));
-				list.push_back(new Bullet(1.2f, pname, Font, sf::Vector2f(Sprite.getPosition().x - cos(PI*Angle / 180) * (Sprite.getOrigin().x - 15.0f), Sprite.getPosition().y - sin(PI*Angle / 180) * (Sprite.getOrigin().x - 15.0f)), Angle - 5 + 180));
-				list.push_back(new Bullet(1.2f, pname, Font, sf::Vector2f(Sprite.getPosition().x - cos(PI*Angle / 180) * (Sprite.getOrigin().x - 15.0f), Sprite.getPosition().y - sin(PI*Angle / 180) *(Sprite.getOrigin().x - 15.0f)), Angle + 5 + 180));
-				list.push_back(new Bullet(1.2f, pname, Font, sf::Vector2f(Sprite.getPosition().x - cos(PI*Angle / 180) * (Sprite.getOrigin().x - 15.0f), Sprite.getPosition().y - sin(PI*Angle / 180) * (Sprite.getOrigin().x - 15.0f)), Angle + 15 + 180));
+				list.push_back(new Bullet(Scale, pname, Font, sf::Vector2f(Sprite.getPosition().x - cos(PI*Angle / 180) * (Sprite.getOrigin().x - 15.0f), Sprite.getPosition().y - sin(PI*Angle / 180) * (Sprite.getOrigin().x - 15.0f)), Angle - 15 + 180));
+				list.push_back(new Bullet(Scale, pname, Font, sf::Vector2f(Sprite.getPosition().x - cos(PI*Angle / 180) * (Sprite.getOrigin().x - 15.0f), Sprite.getPosition().y - sin(PI*Angle / 180) * (Sprite.getOrigin().x - 15.0f)), Angle - 5 + 180));
+				list.push_back(new Bullet(Scale, pname, Font, sf::Vector2f(Sprite.getPosition().x - cos(PI*Angle / 180) * (Sprite.getOrigin().x - 15.0f), Sprite.getPosition().y - sin(PI*Angle / 180) *(Sprite.getOrigin().x - 15.0f)), Angle + 5 + 180));
+				list.push_back(new Bullet(Scale, pname, Font, sf::Vector2f(Sprite.getPosition().x - cos(PI*Angle / 180) * (Sprite.getOrigin().x - 15.0f), Sprite.getPosition().y - sin(PI*Angle / 180) * (Sprite.getOrigin().x - 15.0f)), Angle + 15 + 180));
 			}
 		}
 		else if (Name == "weapon1") {
 			if (sf::Mouse::getPosition(window).x >= Sprite.getPosition().x) {
 				Spark.setTextureRect(sf::IntRect(38, 0, -38, 25));
 				Spark.setOrigin(0, 25 / 2);
+				Spark.setScale(Scale, Scale);
 				Spark.setPosition(sf::Vector2f(Sprite.getPosition().x + cos(PI*Angle / 180) * (75.0f - Sprite.getOrigin().x), Sprite.getPosition().y + sin(PI*Angle / 180) * (75.0f - Sprite.getOrigin().x)));
 				Spark.setRotation(Angle);
-				list.push_back(new Bullet(1.0f, pname, Font, sf::Vector2f(Sprite.getPosition().x + cos(PI*Angle / 180) * (75.0f - Sprite.getOrigin().x), Sprite.getPosition().y + sin(PI*Angle / 180) * (75.0f - Sprite.getOrigin().x)), Angle));
+				list.push_back(new Bullet(Scale, pname, Font, sf::Vector2f(Sprite.getPosition().x + cos(PI*Angle / 180) * (75.0f - Sprite.getOrigin().x), Sprite.getPosition().y + sin(PI*Angle / 180) * (75.0f - Sprite.getOrigin().x)), Angle));
 			}
 			else {
 				Spark.setTextureRect(sf::IntRect(0, 0, 38, 25));
 				Spark.setOrigin(38, 25 / 2);
+				Spark.setScale(Scale, Scale);
 				Spark.setPosition(sf::Vector2f(Sprite.getPosition().x - cos(PI*Angle / 180) * (Sprite.getOrigin().x - 25.0f), Sprite.getPosition().y - sin(PI*Angle / 180) * (Sprite.getOrigin().x - 25.0f)));
 				Spark.setRotation(Angle);
-				list.push_back(new Bullet(1.0f, pname, Font, sf::Vector2f(Sprite.getPosition().x - cos(PI*Angle / 180) * (Sprite.getOrigin().x - 25.0f), Sprite.getPosition().y - sin(PI*Angle / 180) * (Sprite.getOrigin().x - 25.0f)), Angle + 180));
+				list.push_back(new Bullet(Scale, pname, Font, sf::Vector2f(Sprite.getPosition().x - cos(PI*Angle / 180) * (Sprite.getOrigin().x - 25.0f), Sprite.getPosition().y - sin(PI*Angle / 180) * (Sprite.getOrigin().x - 25.0f)), Angle + 180));
 			}
 		}
 		else if (Name == "weapon2") {
 			if (sf::Mouse::getPosition(window).x >= Sprite.getPosition().x) {
 				Spark.setTextureRect(sf::IntRect(38, 0, -38, 25));
 				Spark.setOrigin(0, 25 / 2);
+				Spark.setScale(Scale, Scale);
 				Spark.setPosition(sf::Vector2f(Sprite.getPosition().x + cos(PI*Angle / 180) * (82.0f - Sprite.getOrigin().x), Sprite.getPosition().y + sin(PI*Angle / 180) * (82.0f - Sprite.getOrigin().x)));
 				Spark.setRotation(Angle);
-				list.push_back(new Bullet(1.0f, pname, Font, sf::Vector2f(Sprite.getPosition().x + cos(PI*Angle / 180) * (82.0f - Sprite.getOrigin().x), Sprite.getPosition().y + sin(PI*Angle / 180) * (82.0f - Sprite.getOrigin().x)), Angle));
+				list.push_back(new Bullet(Scale, pname, Font, sf::Vector2f(Sprite.getPosition().x + cos(PI*Angle / 180) * (82.0f - Sprite.getOrigin().x), Sprite.getPosition().y + sin(PI*Angle / 180) * (82.0f - Sprite.getOrigin().x)), Angle));
 			}
 			else {
 				Spark.setTextureRect(sf::IntRect(0, 0, 38, 25));
 				Spark.setOrigin(38, 25 / 2);
+				Spark.setScale(Scale, Scale);
 				Spark.setPosition(sf::Vector2f(Sprite.getPosition().x - cos(PI*Angle / 180) * (Sprite.getOrigin().x - 18.0f), Sprite.getPosition().y - sin(PI*Angle / 180) * (Sprite.getOrigin().x - 18.0f)));
 				Spark.setRotation(Angle);
-				list.push_back(new Bullet(1.0f, pname, Font, sf::Vector2f(Sprite.getPosition().x - cos(PI*Angle / 180) * (Sprite.getOrigin().x - 18.0f), Sprite.getPosition().y - sin(PI*Angle / 180) * (Sprite.getOrigin().x - 18.0f)), Angle + 180));
+				list.push_back(new Bullet(Scale, pname, Font, sf::Vector2f(Sprite.getPosition().x - cos(PI*Angle / 180) * (Sprite.getOrigin().x - 18.0f), Sprite.getPosition().y - sin(PI*Angle / 180) * (Sprite.getOrigin().x - 18.0f)), Angle + 180));
 			}
 		}
 		return true;

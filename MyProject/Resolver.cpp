@@ -59,7 +59,7 @@ void Resolver::CollisionResolver(sf::RenderWindow & window, Player * player, Wor
 			//player->VSpeed = 0;
 		}
 	*/
-	if (!done) {
+	/*if (!done) {
 		if (player->Sprite.getPosition().x == player->PrevPos.x) {
 			player->Sprite.setPosition(player->Sprite.getPosition().x, player->PrevPos.y);
 			player->VSpeed = 0;
@@ -67,5 +67,5 @@ void Resolver::CollisionResolver(sf::RenderWindow & window, Player * player, Wor
 		else {
 			player->Sprite.setPosition(player->PrevPos.x, player->Sprite.getPosition().y);
 		}
-	}
+	}*/
 }
