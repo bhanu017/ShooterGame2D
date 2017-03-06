@@ -60,12 +60,12 @@ bool Collision::PlayerWall(sf::RenderWindow &window, Player *player, World &worl
 
 	if (x_tile < 0 || x_tile > 31)
 	{
-		std::cout << "Out!! \n" ;
+		//std::cout << "Out!! \n" ;
 		return true;
 	}
 	if (y_tile < 0 || y_tile > 31)
 	{
-		std::cout << "Out!! \n";
+		//std::cout << "Out!! \n";
 		return true;
 	}
 
