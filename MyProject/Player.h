@@ -8,7 +8,7 @@
 class Player : public GameObject
 {
 public:
-	Player(std::string &Name, sf::Font textfont);
+	Player(std::string &Name, sf::Font textfont, int id);
 	~Player();
 	float HSpeed;
 	float VSpeed;
@@ -16,6 +16,7 @@ public:
 	bool IsWalking = false;
 	std::string Name;
 	int Health;
+	int Id;
 	Weapon *CurrentWeapon;
 	Weapon *OtherWeapon;
 	std::string LastDamager;
@@ -24,7 +25,7 @@ public:
 	void releaseWeapon(std::vector<Weapon *> &unacquired);
 	void acquireweapon(std::vector<Weapon*>& unacquired);
 	void changeweapon();
-	void draw(sf::RenderWindow & window);
+	void draw(sf::RenderWindow & window, int id);
 private:
 	float HSpeedFly;
 	float HSpeedWalk;
