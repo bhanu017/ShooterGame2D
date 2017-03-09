@@ -11,7 +11,7 @@ Server::Server()
 
 	listener.listen(2000);
 	selector.add(listener);
-
+	done = false;
 	sf::Clock clock;
 	clock.restart();
 	int playerCount = 0;

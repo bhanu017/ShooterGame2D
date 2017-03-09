@@ -53,7 +53,7 @@ int main()
 	if (choice == 1) {
 		/*Server*/
 		Server server;
-		for (int i = 0; i < server.clients.size(), i++) {
+		for (int i = 0; i < server.clients.size(); i++) {
 			packet << 1;
 			server.clients[i]->send(packet);
 			packet.clear();
