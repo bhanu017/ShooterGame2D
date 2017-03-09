@@ -3,13 +3,14 @@
 #include <SFML\Graphics.hpp>
 
 #include "GameObject.h"
+#include "World.h"
 
 class Bullet : public GameObject
 {
 public:
 	Bullet(float scale, std::string name, sf::Font textfont, sf::Vector2f startpos, int angle);
 	~Bullet();
-	void update();
+	bool update(World &world);
 private:
 	int Damage;
 	float Speed;

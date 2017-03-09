@@ -11,8 +11,8 @@ using namespace std;
 
 int main()
 {
-	int windowHeight = 640; /*Vertical length*/
-	int windowWidth = 640; /*Horizontal length*/
+	int windowHeight = 720; /*Vertical length*/
+	int windowWidth = 1280; /*Horizontal length*/
 	ifstream inFile;
 	inFile.open("map.txt");
 	
@@ -82,8 +82,7 @@ int main()
 	healthbar.setOutlineThickness(2.0f);
 	healthbar.setOrigin(sf::Vector2f(0.0f, 4.0f));
 	healthstatus.setOrigin(sf::Vector2f(0.0f, 4.0f));
-	healthbar.setPosition(sf::Vector2f(window.getSize().x - 250, 20.0f));
-	healthstatus.setPosition(sf::Vector2f(window.getSize().x - 250, 20.0f));
+	
 	healthbar.setFillColor(sf::Color::Transparent);
 	/*showing Nitro on screen*/
 	sf::RectangleShape nitrobar(sf::Vector2f(200.0f, 8.0f));
@@ -92,8 +91,7 @@ int main()
 	nitrobar.setOutlineThickness(2.0f);
 	nitrobar.setOrigin(sf::Vector2f(0.0f, 4.0f));
 	nitrostatus.setOrigin(sf::Vector2f(0.0f, 4.0f));
-	nitrobar.setPosition(sf::Vector2f(window.getSize().x - 250, 40.0f));
-	nitrostatus.setPosition(sf::Vector2f(window.getSize().x - 250, 40.0f));
+	
 	nitrobar.setFillColor(sf::Color::Transparent);
 	if (selection == 1) { 
 		//Once the Game starts
@@ -105,15 +103,17 @@ int main()
 		sf::View currentView = window.getView();
 		sf::Texture background;
 		bool isLoaded;
-		isLoaded = background.loadFromFile("textures/Map.png");
+		float zoomlevel = 1.0f;
+		isLoaded = background.loadFromFile("textures/bg.png");
 		if (!isLoaded)
 			return -1;
 		background.setRepeated(true);
 		sf::Sprite bgSprite;
 		bgSprite.setTexture(background);
-		bgSprite.setTextureRect(sf::IntRect(0, 0, windowWidth, windowHeight));/**/
+		bgSprite.setOrigin(sf::Vector2f(1010, 669));
+		bgSprite.setScale((float)(windowWidth + 150.0f) / 2020.0f, (float)(windowHeight + 150.0f) / 1338.0f);
 		Mapping::mapping();			// creates the map.txt and map here.
-		World world;
+		World world(1);
 
 		Player player(name, font);
 		vector<Weapon *> unacquiredWeapons;
@@ -172,7 +172,16 @@ int main()
 			window.clear();
 			
 			//window.draw(shape);
+			player.update(window, world);
+			healthbar.setPosition(sf::Vector2f(player.Sprite.getPosition().x + window.getSize().x / 2 - 250, player.Sprite.getPosition().y - window.getSize().y / 2 + 20.0f));
+			healthstatus.setPosition(sf::Vector2f(player.Sprite.getPosition().x + window.getSize().x / 2 - 250, player.Sprite.getPosition().y - window.getSize().y / 2 + 20.0f));
+			nitrobar.setPosition(sf::Vector2f(player.Sprite.getPosition().x + window.getSize().x / 2 - 250, player.Sprite.getPosition().y - window.getSize().y / 2 + 40.0f));
+			nitrostatus.setPosition(sf::Vector2f(player.Sprite.getPosition().x + window.getSize().x / 2 - 250, player.Sprite.getPosition().y - window.getSize().y / 2 + 40.0f));
+			bgSprite.setPosition(player.Sprite.getPosition());
 			window.draw(bgSprite);
+			/*Draw Tiles*/
+			world.draw(window);
+			/*Draw Tiles*/
 			/*Draw Health Bar*/
 			healthstatus.setSize(sf::Vector2f(2*player.Health, 8.0f));
 			healthstatus.setFillColor(sf::Color::Magenta);
@@ -186,22 +195,20 @@ int main()
 			window.draw(nitrobar);
 			/*Draw Nitro Bar*/
 			
-			player.update(window, world);
-			
 			for (int i = 0; i < releasedBullets.size(); i++) {		//WORK here. we need to damage the player if it passes
 				//through the player and destroy the bullet
-				releasedBullets[i]->update();
-				releasedBullets[i]->draw(window);
+				if (!releasedBullets[i]->update(world)) releasedBullets.erase(releasedBullets.begin()+i);
+				else releasedBullets[i]->draw(window);
 				//window.draw(releasedBullets[i]->Text);
 			}
 			for (int i = 0; i < unacquiredWeapons.size(); i++) {	//WORK here.we need to make Movable to false, as soon as it gets to rest
 				//Then the weapon will be available for use by another player (work of colliders)
 				//also destroy the guns if there are no bullets in it after touching the ground (whatever you feel)
-				if (unacquiredWeapons[i]->Movable) unacquiredWeapons[i]->freefall();
+				if (unacquiredWeapons[i]->Movable) unacquiredWeapons[i]->freefall(world);
 				unacquiredWeapons[i]->draw(window);
 			}
-			//player_view.setCenter(player.Sprite.getPosition());
-			//window.setView(player_view);
+			player_view.setCenter(player.Sprite.getPosition());
+			window.setView(player_view);
 			
 			player.draw(window);
 			
