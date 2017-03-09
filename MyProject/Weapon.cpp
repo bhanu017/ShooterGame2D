@@ -1,7 +1,7 @@
 #include <vector>
 #include <math.h>
-
 #include "Weapon.h"
+#include "Collision.h"
 
 
 #define PI 3.14159265
@@ -10,7 +10,7 @@ Weapon::Weapon(std::string name, sf::Font textfont, sf::Vector2f pos)
 {
 	Movable = false;
 	Font = textfont;
-	Scale = 0.25f;	//change for hdr (approx. 0.5f) test for this - change this (may)
+	Scale = 0.5f;	//change for hdr (approx. 0.5f) test for this - change this (may)
 	Text.setString("Me ..the Destroyer");		//if we want to rename bullet to damage taker, we can write bullet, grenade so on
 	Text.setFont(Font);
 	Name = name;
@@ -61,18 +61,23 @@ Weapon::~Weapon()
 {
 }
 
-void Weapon::freefall()
+void Weapon::freefall(World &world)
 {
+	sf::Vector2f prevPos = Sprite.getPosition();
 	Sprite.move(Velocity.x / 30, Velocity.y / 30);
+	if (Collision::WeaponWall(this, world)) {
+		Sprite.setPosition(prevPos);
+		Movable = false;
+	}
 }
 
 void Weapon::update(sf::Vector2f pos, int angle, sf::RenderWindow &window)
 {
-	if (sf::Mouse::getPosition(window).x == Sprite.getPosition().x) {
-		if (sf::Mouse::getPosition(window).y == Sprite.getPosition().y) {
+	if (sf::Mouse::getPosition(window).x  == window.getSize().x/2) {
+		if (sf::Mouse::getPosition(window).y == window.getSize().y/2 - TextureSize.y/25) {
 			angle = 0;
 		}
-		else if (sf::Mouse::getPosition(window).y > Sprite.getPosition().y) {
+		else if (sf::Mouse::getPosition(window).y > window.getSize().y / 2 - TextureSize.y / 25) {
 			angle = 90;
 		}
 		else {
@@ -80,7 +85,7 @@ void Weapon::update(sf::Vector2f pos, int angle, sf::RenderWindow &window)
 		}
 		Sprite.setPosition(pos.x, pos.y - TextureSize.y / 25);
 	}
-	else if (sf::Mouse::getPosition(window).x > Sprite.getPosition().x) {
+	else if (sf::Mouse::getPosition(window).x >  window.getSize().x / 2) {
 		Sprite.setTextureRect(sf::IntRect(0, 0, TextureSize.x, TextureSize.y));
 		if (Name == "weapon1") Sprite.setOrigin(41, 41);
 		else if (Name == "weapon2") Sprite.setOrigin(36, 44);
@@ -104,7 +109,7 @@ bool Weapon::fire(std::string pname, std::vector<Bullet *> &list, sf::RenderWind
 		No_bullets--;
 		if (Name == "doublebarrel") {
 			No_bullets -= 3;
-			if (sf::Mouse::getPosition(window).x >= Sprite.getPosition().x) {
+			if (sf::Mouse::getPosition(window).x >= window.getSize().x / 2) {
 				Spark.setTextureRect(sf::IntRect(38, 0, -38, 25));
 				Spark.setOrigin(0, 25 / 2);
 				Spark.setScale(Scale, Scale);
@@ -128,7 +133,7 @@ bool Weapon::fire(std::string pname, std::vector<Bullet *> &list, sf::RenderWind
 			}
 		}
 		else if (Name == "weapon1") {
-			if (sf::Mouse::getPosition(window).x >= Sprite.getPosition().x) {
+			if (sf::Mouse::getPosition(window).x >= window.getSize().x / 2) {
 				Spark.setTextureRect(sf::IntRect(38, 0, -38, 25));
 				Spark.setOrigin(0, 25 / 2);
 				Spark.setScale(Scale, Scale);
@@ -146,7 +151,7 @@ bool Weapon::fire(std::string pname, std::vector<Bullet *> &list, sf::RenderWind
 			}
 		}
 		else if (Name == "weapon2") {
-			if (sf::Mouse::getPosition(window).x >= Sprite.getPosition().x) {
+			if (sf::Mouse::getPosition(window).x >= window.getSize().x / 2) {
 				Spark.setTextureRect(sf::IntRect(38, 0, -38, 25));
 				Spark.setOrigin(0, 25 / 2);
 				Spark.setScale(Scale, Scale);

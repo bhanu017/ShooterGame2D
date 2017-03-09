@@ -1,5 +1,6 @@
 #include <math.h>
 #include "Bullet.h"
+#include "Collision.h"
 
 #define PI 3.14159265
 
@@ -33,10 +34,12 @@ Bullet::~Bullet()
 	//when should bullet be destroyed
 }
 
-void Bullet::update()
+bool Bullet::update(World &world)
 {
 	Sprite.move(Speed*cos(Angle*PI / 180), Speed*sin(Angle*PI / 180));// check for collision of bullet.
-
-	Text.setString(std::to_string(Angle));
+	//Player - Bullet
+	if (Collision::BulletWall(this, world)) return false;
+	//Text.setString(std::to_string(Angle));
 	//Destroyer Condition
+	return true;
 }

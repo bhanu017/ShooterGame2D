@@ -3,13 +3,14 @@
 #include <SFML/Graphics.hpp>
 #include "GameObject.h"
 #include "Bullet.h"
+#include "World.h"
 
 class Weapon : public GameObject
 {
 public:
 	Weapon(std::string name, sf::Font textfont, sf::Vector2f pos);
 	~Weapon();
-	void freefall();
+	void freefall(World &world);
 	void update(sf::Vector2f pos, int angle, sf::RenderWindow &window);
 	bool fire(std::string pname, std::vector<Bullet *> &list, sf::RenderWindow &window, sf::Sprite &Spark);
 	std::string Name;

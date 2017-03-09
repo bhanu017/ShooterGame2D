@@ -3,6 +3,8 @@
 #include "GameObject.h"
 #include "Player.h"
 #include "World.h"
+#include "Bullet.h"
+#include "Weapon.h"
 
 class Collision
 {
@@ -13,6 +15,7 @@ public:
 	//void setWorld(World world);
 	static bool PlayerWall(sf::RenderWindow &window, Player *player, World &world);
 	static void resolveBounds(sf::RenderWindow &window, Player *player, World &world);
-	static bool BulletWall();
+	static bool BulletWall(Bullet *bullet, World &world);
+	static bool WeaponWall(Weapon *weapon, World &world);
 };
 

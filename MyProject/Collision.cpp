@@ -1,7 +1,8 @@
 #include "Collision.h"
-#include "Player.h"
-#include "GameObject.h"
-#include "World.h"
+//#include "Player.h"
+//#include "GameObject.h"
+//#include "World.h"
+//#include "Weapon.h"
 #include <iostream>
 
 Collision::Collision()
@@ -70,48 +71,48 @@ bool Collision::PlayerWall(sf::RenderWindow &window, Player *player, World &worl
 	}
 	*/
 
-	if (world.tile_index[x_tile][y_tile] == 1)
+	if (world.tile_index[x_tile][y_tile] != 0)
 	{
 		return true;
 	}
 	if (x_tile - 1 >= 0) {
 		if (y_tile - 1 >= 0) {
-			if (world.tile_index[x_tile - 1][y_tile - 1] == 1) {
-				if (player->Sprite.getGlobalBounds().intersects(sf::Rect<float>::Rect((x_tile - 1)*world.TileSize, (y_tile - 1)*world.TileSize, world.TileSize, world.TileSize))) return true;
+			if (world.tile_index[x_tile - 1][y_tile - 1] != 0) {
+				if (sf::Rect<float>::Rect(player->Sprite.getGlobalBounds().left + 10.0f*player->getScale(), player->Sprite.getGlobalBounds().top, player->Sprite.getGlobalBounds().width - 20.0f*player->getScale(), player->Sprite.getGlobalBounds().height).intersects(sf::Rect<float>::Rect((x_tile - 1)*world.TileSize, (y_tile - 1)*world.TileSize, world.TileSize, world.TileSize))) return true;
 			}
 		}
-		if (y_tile + 1 <= 31) {
-			if (world.tile_index[x_tile - 1][y_tile + 1] == 1) {
-				if (player->Sprite.getGlobalBounds().intersects(sf::Rect<float>::Rect((x_tile - 1)*world.TileSize, (y_tile + 1)*world.TileSize, world.TileSize, world.TileSize))) return true;
+		if (y_tile + 1 < world.y_tiles) {
+			if (world.tile_index[x_tile - 1][y_tile + 1] != 0) {
+				if (sf::Rect<float>::Rect(player->Sprite.getGlobalBounds().left + 10.0f*player->getScale(), player->Sprite.getGlobalBounds().top, player->Sprite.getGlobalBounds().width - 20.0f*player->getScale(), player->Sprite.getGlobalBounds().height).intersects(sf::Rect<float>::Rect((x_tile - 1)*world.TileSize, (y_tile + 1)*world.TileSize, world.TileSize, world.TileSize))) return true;
 			}
 		}
-		if (world.tile_index[x_tile - 1][y_tile] == 1) {
-			if (player->Sprite.getGlobalBounds().intersects(sf::Rect<float>::Rect((x_tile - 1)*world.TileSize, y_tile*world.TileSize, world.TileSize, world.TileSize))) return true;
+		if (world.tile_index[x_tile - 1][y_tile] != 0) {
+			if (sf::Rect<float>::Rect(player->Sprite.getGlobalBounds().left + 10.0f*player->getScale(), player->Sprite.getGlobalBounds().top, player->Sprite.getGlobalBounds().width - 20.0f*player->getScale(), player->Sprite.getGlobalBounds().height).intersects(sf::Rect<float>::Rect((x_tile - 1)*world.TileSize, y_tile*world.TileSize, world.TileSize, world.TileSize))) return true;
 		}
 	}
-	if (x_tile + 1 <= 31) {
+	if (x_tile + 1 <= world.x_tiles) {
 		if (y_tile - 1 >= 0) {
-			if (world.tile_index[x_tile + 1][y_tile - 1] == 1) {
-				if (player->Sprite.getGlobalBounds().intersects(sf::Rect<float>::Rect((x_tile+ 1)*world.TileSize, (y_tile - 1)*world.TileSize, world.TileSize, world.TileSize))) return true;
+			if (world.tile_index[x_tile + 1][y_tile - 1] != 0) {
+				if (sf::Rect<float>::Rect(player->Sprite.getGlobalBounds().left + 10.0f*player->getScale(), player->Sprite.getGlobalBounds().top, player->Sprite.getGlobalBounds().width - 20.0f*player->getScale(), player->Sprite.getGlobalBounds().height).intersects(sf::Rect<float>::Rect((x_tile+ 1)*world.TileSize, (y_tile - 1)*world.TileSize, world.TileSize, world.TileSize))) return true;
 			}
 		}
-		if (y_tile + 1 <= 31) {
-			if (world.tile_index[x_tile + 1][y_tile + 1] == 1) {
-				if (player->Sprite.getGlobalBounds().intersects(sf::Rect<float>::Rect((x_tile + 1)*world.TileSize, (y_tile + 1)*world.TileSize, world.TileSize, world.TileSize))) return true;
+		if (y_tile + 1 <= world.y_tiles) {
+			if (world.tile_index[x_tile + 1][y_tile + 1] != 0) {
+				if (sf::Rect<float>::Rect(player->Sprite.getGlobalBounds().left + 10.0f*player->getScale(), player->Sprite.getGlobalBounds().top, player->Sprite.getGlobalBounds().width - 20.0f*player->getScale(), player->Sprite.getGlobalBounds().height).intersects(sf::Rect<float>::Rect((x_tile + 1)*world.TileSize, (y_tile + 1)*world.TileSize, world.TileSize, world.TileSize))) return true;
 			}
 		}
-		if (world.tile_index[x_tile + 1][y_tile] == 1) {
-			if (player->Sprite.getGlobalBounds().intersects(sf::Rect<float>::Rect((x_tile + 1)*world.TileSize, y_tile*world.TileSize, world.TileSize, world.TileSize))) return true;
+		if (world.tile_index[x_tile + 1][y_tile] != 0) {
+			if (sf::Rect<float>::Rect(player->Sprite.getGlobalBounds().left + 10.0f*player->getScale(), player->Sprite.getGlobalBounds().top, player->Sprite.getGlobalBounds().width - 20.0f*player->getScale(), player->Sprite.getGlobalBounds().height).intersects(sf::Rect<float>::Rect((x_tile + 1)*world.TileSize, y_tile*world.TileSize, world.TileSize, world.TileSize))) return true;
 		}
 	}
 	if (y_tile - 1 >= 0) {
-		if (world.tile_index[x_tile][y_tile - 1] == 1) {
-			if (player->Sprite.getGlobalBounds().intersects(sf::Rect<float>::Rect(x_tile*world.TileSize, (y_tile - 1)*world.TileSize, world.TileSize, world.TileSize))) return true;
+		if (world.tile_index[x_tile][y_tile - 1] != 0) {
+			if (sf::Rect<float>::Rect(player->Sprite.getGlobalBounds().left + 10.0f*player->getScale(), player->Sprite.getGlobalBounds().top, player->Sprite.getGlobalBounds().width - 20.0f*player->getScale(), player->Sprite.getGlobalBounds().height).intersects(sf::Rect<float>::Rect(x_tile*world.TileSize, (y_tile - 1)*world.TileSize, world.TileSize, world.TileSize))) return true;
 		}
 	}
-	if (y_tile + 1 <= 31) {
-		if (world.tile_index[x_tile][y_tile + 1] == 1) {
-			if (player->Sprite.getGlobalBounds().intersects(sf::Rect<float>::Rect(x_tile*world.TileSize, (y_tile + 1)*world.TileSize, world.TileSize, world.TileSize))) return true;
+	if (y_tile + 1 <= world.y_tiles) {
+		if (world.tile_index[x_tile][y_tile + 1] != 0) {
+			if (sf::Rect<float>::Rect(player->Sprite.getGlobalBounds().left + 10.0f*player->getScale(), player->Sprite.getGlobalBounds().top, player->Sprite.getGlobalBounds().width - 20.0f*player->getScale(), player->Sprite.getGlobalBounds().height).intersects(sf::Rect<float>::Rect(x_tile*world.TileSize, (y_tile + 1)*world.TileSize, world.TileSize, world.TileSize))) return true;
 		}
 	}
 	return false;
@@ -124,14 +125,14 @@ void Collision::resolveBounds(sf::RenderWindow & window, Player * player, World 
 		player->Sprite.setPosition(sf::Vector2f(0.0f, player->Sprite.getPosition().y));
 		//player->VSpeed = 0;
 	}
-	else if (player->Sprite.getPosition().x >= 640.0f)
+	else if (player->Sprite.getPosition().x >= world.x_tiles*world.TileSize)
 	{
-		player->Sprite.setPosition(sf::Vector2f(639.0f, player->Sprite.getPosition().y));
+		player->Sprite.setPosition(sf::Vector2f(world.x_tiles*world.TileSize-1, player->Sprite.getPosition().y));
 		//player->VSpeed = 0;
 	}
-	if (player->Sprite.getPosition().y >= 640.0f)
+	if (player->Sprite.getPosition().y >= world.y_tiles*world.TileSize)
 	{
-		player->Sprite.setPosition(sf::Vector2f(player->Sprite.getPosition().x, 639.0f));
+		player->Sprite.setPosition(sf::Vector2f(player->Sprite.getPosition().x, world.y_tiles*world.TileSize-1));
 		player->VSpeed = 0;
 	}
 	else if (player->Sprite.getPosition().y < 0.0f)
@@ -141,7 +142,49 @@ void Collision::resolveBounds(sf::RenderWindow & window, Player * player, World 
 	}
 }
 
-bool Collision::BulletWall()
+bool Collision::BulletWall(Bullet *bullet, World &world)
 {
+	if (bullet->Sprite.getPosition().x >= world.x_tiles*world.TileSize) {
+		return true;
+	}
+	else if (bullet->Sprite.getPosition().y >= world.y_tiles*world.TileSize) {
+		return true;
+	}
+	else if (bullet->Sprite.getPosition().y < 0.0f) {
+		return true;
+	}
+	else if (bullet->Sprite.getPosition().x < 0.0f) {
+		return true;
+	}
+	else {
+		int x = bullet->Sprite.getPosition().x / world.TileSize;
+		int y = bullet->Sprite.getPosition().y / world.TileSize;
+		if (world.tile_index[x][y] != 0) {
+			return true;
+		}
+	}
+	return false;
+}
+
+bool Collision::WeaponWall(Weapon *weapon, World &world) {
+	if (weapon->Sprite.getPosition().x >= world.x_tiles*world.TileSize) {
+		return true;
+	}
+	else if (weapon->Sprite.getPosition().y >= world.y_tiles*world.TileSize) {
+		return true;
+	}
+	else if (weapon->Sprite.getPosition().y < 0.0f) {
+		return true;
+	}
+	else if (weapon->Sprite.getPosition().x < 0.0f) {
+		return true;
+	}
+	else {
+		int x = weapon->Sprite.getPosition().x / world.TileSize;
+		int y = weapon->Sprite.getPosition().y / world.TileSize;
+		if (world.tile_index[x][y] != 0) {
+			return true;
+		}
+	}
 	return false;
 }

@@ -4,28 +4,48 @@
 using namespace std;
 
 
-World::World()
+World::World(int MAP_NUM)
 {
 	ifstream inFile;
-	inFile.open("map.txt");
+	if (MAP_NUM == 1) {
+		inFile.open("map1.txt");
+		TileSize = 32.0f;
+		Scaled = 0.25f;
+		//Texture Initializations here
+		tileSet.resize(7);
+		tileSet[0].loadFromFile("textures/brown.jpg");
+		tileSet[1].loadFromFile("textures/metal.jpg");
+		tileSet[2].loadFromFile("textures/orange.jpg");
+		tileSet[3].loadFromFile("textures/blue.jpg");
+		tileSet[4].loadFromFile("textures/green.jpg");
+		tileSet[5].loadFromFile("textures/yellow.jpg");
+		tileSet[6].loadFromFile("textures/red.jpg");
+	}
 
 	inFile >> x_tiles;
 	inFile >> y_tiles;
-	int a, b;
-	TileSize = 20.0f;
-
+	inFile >> NumTiles;
+	spriteMap.resize(NumTiles);
 	tile_index.resize(x_tiles);
 	for (int i = 0; i < x_tiles; i++)
 	{
 		tile_index[i].resize(y_tiles);
 	}
-
-	for (int j = 0; j < x_tiles; j++)
+	int x = 0;
+	for (int j = 0; j < y_tiles; j++)
 	{
-		for (int i = 0; i < y_tiles; i++)
+		for (int i = 0; i < x_tiles; i++)
 		{
 
-			inFile >> a >> b >> tile_index[i][j];
+			inFile >> tile_index[i][j];
+			if ((tile_index[i][j] > 3) && (tile_index[i][j] < 8)) tile_index[i][j] = 4;
+			if (tile_index[i][j] >= 8) tile_index[i][j] -= 3;
+			if (tile_index[i][j] != 0) {
+				spriteMap[x].setTexture(tileSet[tile_index[i][j]-1]);
+				spriteMap[x].setScale(Scaled, Scaled);
+				spriteMap[x].setPosition(sf::Vector2f(i*TileSize, j*TileSize));
+				x++;
+			}
 		}
 	}
 	inFile.close();
@@ -45,6 +65,13 @@ World::World()
 
 World::~World()
 {
+}
+
+void World::draw(sf::RenderWindow & window)
+{
+	for (int i = 0; i < NumTiles; i++) {
+		window.draw(spriteMap[i]);
+	}
 }
 
 
