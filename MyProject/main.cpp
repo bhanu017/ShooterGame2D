@@ -52,7 +52,12 @@ int main()
 	int No_of_players;
 	if (choice == 1) {
 		/*Server*/
-		Server server();
+		Server server;
+		for (int i = 0; i < server.clients.size(), i++) {
+			packet << 1;
+			server.clients[i]->send(packet);
+			packet.clear();
+		}
 		return 0;
 	}
 	else if (choice == 0) {
