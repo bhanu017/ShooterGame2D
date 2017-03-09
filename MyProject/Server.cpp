@@ -8,10 +8,6 @@ using namespace std;
 Server::Server()
 {
 	sf::TcpListener listener;
-	sf::SocketSelector selector;
-	bool done = false;
-	std::vector <sf::TcpSocket * > clients;
-	std::vector <string> names;
 
 	listener.listen(2000);
 	selector.add(listener);
@@ -77,13 +73,12 @@ Server::Server()
 			}
 		}
 	}*/
-	for (vector <sf::TcpSocket * >::iterator it = clients.begin(); it != clients.end(); it++)
-	{
-		delete *it;
-	}
 }
 
 Server::~Server() 
 {
-
+	for (vector <sf::TcpSocket * >::iterator it = clients.begin(); it != clients.end(); it++)
+	{
+		delete *it;
+	}
 }
