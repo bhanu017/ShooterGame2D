@@ -36,6 +36,9 @@ Server::Server()
 			names[0] = name;
 			playerCount++;
 
+			packet << id;
+			clients[id]->send(packet);
+
 			cout << name << " has been connected with id == " << id << endl;
 			clients.push_back(socket);
 			selector.add(*socket);
