@@ -11,10 +11,11 @@
 
 //using namespace std;
 
-Player::Player(std::string &name, sf::Font textfont)
+Player::Player(std::string &name, sf::Font textfont, int id)
 {
 	sf::Vector2i sizeOfTile = sf::Vector2i(20, 20);
 	Movable = true;
+	Id = id;
 	TextureSize = sf::Vector2i(95, 154);	//164, 265 for hdr
 	TextureFlySize = sf::Vector2i(101, 222);	//174, 382 for hdr
 	Font = textfont;
@@ -444,9 +445,13 @@ void Player::changeweapon()
 	OtherWeapon = temp;
 }
 
-void Player::draw(sf::RenderWindow & window) {
+void Player::draw(sf::RenderWindow & window, int mainPlayer) {
 	window.draw(this->Sprite);
-	if (CurrentWeapon != NULL) window.draw(focusline);
-	Text.setCharacterSize(25);
-	window.draw(this->Text);
+	if (mainPlayer == Id) {
+		if (CurrentWeapon != NULL) window.draw(focusline);
+	}
+	else {
+		Text.setCharacterSize(25);
+		window.draw(this->Text);
+	}
 }
