@@ -21,7 +21,7 @@ Server::Server()
 	int playerCount = 0;
 	int id;
 
-	while ((clock.getElapsedTime()).asSeconds < 120)
+	while ((clock.getElapsedTime()).asSeconds() < 120)
 	{
 		if (selector.isReady(listener))
 		{
@@ -41,7 +41,7 @@ Server::Server()
 			selector.add(*socket);
 		}
 	}
-	for (int i; i < clients.size(); i++)
+	for (int i = 0; i < clients.size(); i++)
 	{
 		sf::Packet sendPacket;
 		sendPacket << i << names[i];
