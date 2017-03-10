@@ -41,7 +41,7 @@ int main()
 {
 	int choice;
 	char n;
-	std::cout << "FunShooter" << "Press Any Key to continue" << endl;
+	std::cout << "FunShooter" << " - Press Any Key to continue" << endl;
 	std::cin >> n;
 	std::cout << "1 for server , 0 for client" << endl;
 	std::cin >> choice;
@@ -148,9 +148,11 @@ int main()
 			std::cout << "......Enter the Server Address..." << endl;
 			std::cin >> buffer;
 			sf::IpAddress ip(buffer);
+			if (socket.connect(ip, 5400, sf::seconds(10.0f)) != sf::Socket::Done) {
+				return -1;
+			}
 			std::cout << "Enter your Display Name: " << endl;
 			std::cin >> name;
-			socket.connect(ip, 2000);
 			packet << name;
 			socket.send(packet);
 			packet.clear();
