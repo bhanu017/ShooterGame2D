@@ -2,7 +2,6 @@
 #include<SFML\Network.hpp>
 #include <vector>
 #include <string>
-
 class Server
 {
 public:
