@@ -126,7 +126,6 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Resolver.cpp" />
     <ClCompile Include="Server.cpp" />
-    <ClCompile Include="TMXParser.cpp" />
     <ClCompile Include="Weapon.cpp" />
     <ClCompile Include="World.cpp" />
   </ItemGroup>
@@ -139,7 +138,6 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="Resolver.h" />
     <ClInclude Include="Server.h" />
-    <ClInclude Include="TMXParser.h" />
     <ClInclude Include="Weapon.h" />
     <ClInclude Include="World.h" />
   </ItemGroup>

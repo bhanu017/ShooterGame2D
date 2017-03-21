@@ -55,7 +55,10 @@ int main()
 		Server server;
 		for (int i = 0; i < server.clients.size(); i++) {
 			packet << 1;
-			server.clients[i]->send(packet);
+			if (server.clients[i]->send(packet) != sf::Socket::Done) {
+				cout << "Unknown Error-2" << endl;
+				return -1;
+			}
 			packet.clear();
 		}
 		return 0;
@@ -149,17 +152,27 @@ int main()
 			std::cin >> buffer;
 			sf::IpAddress ip(buffer);
 			if (socket.connect(ip, 5400, sf::seconds(10.0f)) != sf::Socket::Done) {
+				cout << "Unknown Error" << endl;
 				return -1;
 			}
 			std::cout << "Enter your Display Name: " << endl;
 			std::cin >> name;
 			packet << name;
-			socket.send(packet);
+			if (socket.send(packet) == sf::Socket::Done) {
+				cout << "Unknown Error-2" << endl;
+				return -1;
+			}
 			packet.clear();
-			socket.receive(packet);
+			if (socket.receive(packet) == sf::Socket::Done) {
+				cout << "Unknown Error-2" << endl;
+				return -1;
+			}
 			packet >> id;
 			packet.clear();
-			socket.receive(packet);
+			if (socket.receive(packet) != sf::Socket::Done) {
+				cout << "Unknown Error-2" << endl;
+				return -1;
+			}
 			packet >> No_of_players;
 			packet.clear();
 			player.resize(No_of_players);
@@ -167,7 +180,10 @@ int main()
 			vector<int> ids;
 			ids.resize(No_of_players);
 			for (int i = 0; i < No_of_players; i++) {
-				socket.receive(packet);
+				if (socket.receive(packet) != sf::Socket::Done) {
+					cout << "Unknown Error-2" << endl;
+					return -1;
+				}
 				packet >> ids[i] >> name;
 				packet.clear();
 				player[i] = new Player(name, font, ids[i]);
@@ -217,7 +233,10 @@ int main()
 			sf::Sprite Spark;
 			Spark.setTexture(spark);
 			window.setFramerateLimit(30);
-			socket.receive(packet);
+			if (socket.receive(packet) != sf::Socket::Done) {
+				cout << "Unknown Error-2" << endl;
+				return -1;
+			}
 			packet >> choice;
 			if (choice != 0) return 1;
 			packet.clear();
@@ -228,10 +247,16 @@ int main()
 				{
 					if (event.type == sf::Event::Closed) {
 						packet << "esc";
-						socket.send(packet);
+						if (socket.send(packet) != sf::Socket::Done) {
+							cout << "Unknown Error-2" << endl;
+							return -1;
+						}
 						packet.clear();
 						while (1) {
-							socket.receive(packet);
+							if (socket.receive(packet) != sf::Socket::Done) {
+								cout << "Unknown Error-2" << endl;
+								return -1;
+							}
 							packet >> buffer;
 							if (buffer == "Bye") {
 								cout << "Bye.." << endl;
@@ -249,10 +274,16 @@ int main()
 							}
 							else {
 								packet << "esc";
-								socket.send(packet);
+								if (socket.send(packet) != sf::Socket::Done) {
+									cout << "Unknown Error-2" << endl;
+									return -1;
+								}
 								packet.clear();
 								while (1) {
-									socket.receive(packet);
+									if (socket.receive(packet) != sf::Socket::Done) {
+										cout << "Unknown Error-2" << endl;
+										return -1;
+									}
 									packet >> buffer;
 									if (buffer == "Bye") {
 										cout << "Bye.." << endl;
