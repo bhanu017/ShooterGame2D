@@ -1,10 +1,10 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include "GameObject.h"
-#include "Player.h"
-#include "World.h"
-#include "Bullet.h"
-#include "Weapon.h"
+#include "entities/GameObject.h"
+#include "entities/Player.h"
+#include "core/World.h"
+#include "entities/Bullet.h"
+#include "entities/Weapon.h"
 
 class Collision
 {

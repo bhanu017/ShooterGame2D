@@ -5,6 +5,8 @@
 //#include "Weapon.h"
 #include <iostream>
 
+using namespace std;
+
 Collision::Collision()
 {
 
@@ -78,41 +80,97 @@ bool Collision::PlayerWall(sf::RenderWindow &window, Player *player, World &worl
 	if (x_tile - 1 >= 0) {
 		if (y_tile - 1 >= 0) {
 			if (world.tile_index[x_tile - 1][y_tile - 1] != 0) {
-				if (sf::Rect<float>::Rect(player->Sprite.getGlobalBounds().left + 10.0f*player->getScale(), player->Sprite.getGlobalBounds().top, player->Sprite.getGlobalBounds().width - 20.0f*player->getScale(), player->Sprite.getGlobalBounds().height).intersects(sf::Rect<float>::Rect((x_tile - 1)*world.TileSize, (y_tile - 1)*world.TileSize, world.TileSize, world.TileSize))) return true;
+				if (sf::Rect<float>(player->Sprite.getGlobalBounds().left + 10.0f*player->getScale(),
+								   player->Sprite.getGlobalBounds().top,
+								   player->Sprite.getGlobalBounds().width - 20.0f*player->getScale(),
+								   player->Sprite.getGlobalBounds().height)
+					.intersects(sf::Rect<float>((x_tile - 1)*world.TileSize,
+											   (y_tile - 1)*world.TileSize,
+											   world.TileSize,
+											   world.TileSize))) return true;
 			}
 		}
 		if (y_tile + 1 < world.y_tiles) {
 			if (world.tile_index[x_tile - 1][y_tile + 1] != 0) {
-				if (sf::Rect<float>::Rect(player->Sprite.getGlobalBounds().left + 10.0f*player->getScale(), player->Sprite.getGlobalBounds().top, player->Sprite.getGlobalBounds().width - 20.0f*player->getScale(), player->Sprite.getGlobalBounds().height).intersects(sf::Rect<float>::Rect((x_tile - 1)*world.TileSize, (y_tile + 1)*world.TileSize, world.TileSize, world.TileSize))) return true;
+				if (sf::Rect<float>(player->Sprite.getGlobalBounds().left + 10.0f*player->getScale(),
+								   player->Sprite.getGlobalBounds().top,
+								   player->Sprite.getGlobalBounds().width - 20.0f*player->getScale(),
+								   player->Sprite.getGlobalBounds().height)
+					.intersects(sf::Rect<float>((x_tile - 1)*world.TileSize,
+											   (y_tile + 1)*world.TileSize,
+											   world.TileSize,
+											   world.TileSize))) return true;
 			}
 		}
 		if (world.tile_index[x_tile - 1][y_tile] != 0) {
-			if (sf::Rect<float>::Rect(player->Sprite.getGlobalBounds().left + 10.0f*player->getScale(), player->Sprite.getGlobalBounds().top, player->Sprite.getGlobalBounds().width - 20.0f*player->getScale(), player->Sprite.getGlobalBounds().height).intersects(sf::Rect<float>::Rect((x_tile - 1)*world.TileSize, y_tile*world.TileSize, world.TileSize, world.TileSize))) return true;
+			if (sf::Rect<float>(player->Sprite.getGlobalBounds().left + 10.0f*player->getScale(),
+							   player->Sprite.getGlobalBounds().top,
+							   player->Sprite.getGlobalBounds().width - 20.0f*player->getScale(),
+							   player->Sprite.getGlobalBounds().height)
+				.intersects(sf::Rect<float>((x_tile - 1)*world.TileSize,
+										   y_tile*world.TileSize,
+										   world.TileSize,
+										   world.TileSize))) return true;
 		}
 	}
 	if (x_tile + 1 <= world.x_tiles) {
 		if (y_tile - 1 >= 0) {
 			if (world.tile_index[x_tile + 1][y_tile - 1] != 0) {
-				if (sf::Rect<float>::Rect(player->Sprite.getGlobalBounds().left + 10.0f*player->getScale(), player->Sprite.getGlobalBounds().top, player->Sprite.getGlobalBounds().width - 20.0f*player->getScale(), player->Sprite.getGlobalBounds().height).intersects(sf::Rect<float>::Rect((x_tile+ 1)*world.TileSize, (y_tile - 1)*world.TileSize, world.TileSize, world.TileSize))) return true;
+				if (sf::Rect<float>(player->Sprite.getGlobalBounds().left + 10.0f*player->getScale(),
+								   player->Sprite.getGlobalBounds().top,
+								   player->Sprite.getGlobalBounds().width - 20.0f*player->getScale(),
+								   player->Sprite.getGlobalBounds().height)
+					.intersects(sf::Rect<float>((x_tile+ 1)*world.TileSize,
+											   (y_tile - 1)*world.TileSize,
+											   world.TileSize,
+											   world.TileSize))) return true;
 			}
 		}
 		if (y_tile + 1 <= world.y_tiles) {
 			if (world.tile_index[x_tile + 1][y_tile + 1] != 0) {
-				if (sf::Rect<float>::Rect(player->Sprite.getGlobalBounds().left + 10.0f*player->getScale(), player->Sprite.getGlobalBounds().top, player->Sprite.getGlobalBounds().width - 20.0f*player->getScale(), player->Sprite.getGlobalBounds().height).intersects(sf::Rect<float>::Rect((x_tile + 1)*world.TileSize, (y_tile + 1)*world.TileSize, world.TileSize, world.TileSize))) return true;
+				if (sf::Rect<float>(player->Sprite.getGlobalBounds().left + 10.0f*player->getScale(),
+								   player->Sprite.getGlobalBounds().top,
+								   player->Sprite.getGlobalBounds().width - 20.0f*player->getScale(),
+								   player->Sprite.getGlobalBounds().height)
+					.intersects(sf::Rect<float>((x_tile + 1)*world.TileSize,
+											   (y_tile + 1)*world.TileSize,
+											   world.TileSize,
+											   world.TileSize))) return true;
 			}
 		}
 		if (world.tile_index[x_tile + 1][y_tile] != 0) {
-			if (sf::Rect<float>::Rect(player->Sprite.getGlobalBounds().left + 10.0f*player->getScale(), player->Sprite.getGlobalBounds().top, player->Sprite.getGlobalBounds().width - 20.0f*player->getScale(), player->Sprite.getGlobalBounds().height).intersects(sf::Rect<float>::Rect((x_tile + 1)*world.TileSize, y_tile*world.TileSize, world.TileSize, world.TileSize))) return true;
+			if (sf::Rect<float>(player->Sprite.getGlobalBounds().left + 10.0f*player->getScale(),
+							   player->Sprite.getGlobalBounds().top,
+							   player->Sprite.getGlobalBounds().width - 20.0f*player->getScale(),
+							   player->Sprite.getGlobalBounds().height)
+				.intersects(sf::Rect<float>((x_tile + 1)*world.TileSize,
+										   y_tile*world.TileSize,
+										   world.TileSize,
+										   world.TileSize))) return true;
 		}
 	}
 	if (y_tile - 1 >= 0) {
 		if (world.tile_index[x_tile][y_tile - 1] != 0) {
-			if (sf::Rect<float>::Rect(player->Sprite.getGlobalBounds().left + 10.0f*player->getScale(), player->Sprite.getGlobalBounds().top, player->Sprite.getGlobalBounds().width - 20.0f*player->getScale(), player->Sprite.getGlobalBounds().height).intersects(sf::Rect<float>::Rect(x_tile*world.TileSize, (y_tile - 1)*world.TileSize, world.TileSize, world.TileSize))) return true;
+			if (sf::Rect<float>(player->Sprite.getGlobalBounds().left + 10.0f*player->getScale(),
+							   player->Sprite.getGlobalBounds().top,
+							   player->Sprite.getGlobalBounds().width - 20.0f*player->getScale(),
+							   player->Sprite.getGlobalBounds().height)
+				.intersects(sf::Rect<float>(x_tile*world.TileSize,
+										   (y_tile - 1)*world.TileSize,
+										   world.TileSize,
+										   world.TileSize))) return true;
 		}
 	}
 	if (y_tile + 1 <= world.y_tiles) {
 		if (world.tile_index[x_tile][y_tile + 1] != 0) {
-			if (sf::Rect<float>::Rect(player->Sprite.getGlobalBounds().left + 10.0f*player->getScale(), player->Sprite.getGlobalBounds().top, player->Sprite.getGlobalBounds().width - 20.0f*player->getScale(), player->Sprite.getGlobalBounds().height).intersects(sf::Rect<float>::Rect(x_tile*world.TileSize, (y_tile + 1)*world.TileSize, world.TileSize, world.TileSize))) return true;
+			if (sf::Rect<float>(player->Sprite.getGlobalBounds().left + 10.0f*player->getScale(),
+							   player->Sprite.getGlobalBounds().top,
+							   player->Sprite.getGlobalBounds().width - 20.0f*player->getScale(),
+							   player->Sprite.getGlobalBounds().height)
+				.intersects(sf::Rect<float>(x_tile*world.TileSize,
+										   (y_tile + 1)*world.TileSize,
+										   world.TileSize,
+										   world.TileSize))) return true;
 		}
 	}
 	return false;

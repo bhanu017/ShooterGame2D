@@ -1,13 +1,13 @@
 #include <SFML/Graphics.hpp>
-#include "Player.h"
-#include "Menu.h"
-#include "Mapping.h"
-#include "World.h"
+#include "entities/Player.h"
+#include "core/Menu.h"
+#include "core/Mapping.h"
+#include "core/World.h"
 #include <string>
 #include <fstream>
-#include "Collision.h"
+#include "physics/Collision.h"
 #include <iostream>
-#include "Server.h"
+#include "server/Server.h"
 #include <SFML/Network.hpp>
 
 using namespace std;
@@ -41,7 +41,7 @@ int main()
 {
 	int choice;
 	char n;
-	std::cout << "FunShooter" << " - Press Any Key to continue" << endl;
+	std::cout << "Mini Mayhem" << " - Press Any Key to continue" << endl;
 	std::cin >> n;
 	std::cout << "1 for server , 0 for client" << endl;
 	std::cin >> choice;
@@ -69,10 +69,10 @@ int main()
 		int windowHeight = 720; /*Vertical length*/
 		int windowWidth = 1280; /*Horizontal length*/
 		ifstream inFile;
-		inFile.open("map.txt");
+		inFile.open("assets/maps/map.txt");
 
 
-		sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight), "FunShooter", sf::Style::Default);/**/
+		sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight), "Mini Mayhem", sf::Style::Default);/**/
 		bool fullscreen = false;
 		Menu menu(window.getSize().x, window.getSize().y);
 		int selection = 0;
@@ -145,7 +145,7 @@ int main()
 		
 
 		sf::Font font;
-		font.loadFromFile("fonts/arial.ttf");	//3 other Fonts Available
+		font.loadFromFile("assets/fonts/sans.ttf");	//3 other Fonts Available
 		if (selection == 1) {
 			std::string name;
 			std::cout << "......Enter the Server Address..." << endl;
@@ -217,7 +217,7 @@ int main()
 			sf::Texture background;
 			bool isLoaded;
 			float zoomlevel = 1.0f;
-			isLoaded = background.loadFromFile("textures/bg.png");
+			isLoaded = background.loadFromFile("assets/textures/bg.png");
 			if (!isLoaded)
 				return -1;
 			background.setRepeated(true);
@@ -229,7 +229,7 @@ int main()
 			World world(1);
 
 			sf::Texture spark;
-			spark.loadFromFile("textures/spark.png");
+			spark.loadFromFile("assets/textures/spark.png");
 			sf::Sprite Spark;
 			Spark.setTexture(spark);
 			window.setFramerateLimit(30);
@@ -269,7 +269,7 @@ int main()
 						switch (event.key.code) {
 						case sf::Keyboard::Escape:
 							if (fullscreen) {
-								window.create(sf::VideoMode(windowWidth, windowHeight), "FunShooter", sf::Style::Default);/**/
+								window.create(sf::VideoMode(windowWidth, windowHeight), "Mini Mayhem", sf::Style::Default);/**/
 								fullscreen = false;
 							}
 							else {
@@ -295,7 +295,7 @@ int main()
 							break;
 						case sf::Keyboard::Return:
 							if (!fullscreen) {
-								window.create(sf::VideoMode(windowWidth, windowHeight), "FunShooter", sf::Style::Fullscreen);/**/
+								window.create(sf::VideoMode(windowWidth, windowHeight), "Mini Mayhem", sf::Style::Fullscreen);/**/
 								fullscreen = true;
 							}
 							break;
@@ -380,7 +380,7 @@ int main()
 						switch (event.key.code) {
 						case sf::Keyboard::Escape:
 							if (fullscreen) {
-								window.create(sf::VideoMode(windowWidth, windowHeight), "FunShooter", sf::Style::Default);/**/
+								window.create(sf::VideoMode(windowWidth, windowHeight), "Mini Mayhem", sf::Style::Default);/**/
 								fullscreen = false;
 							}
 							else {
@@ -389,7 +389,7 @@ int main()
 							break;
 						case sf::Keyboard::Return:
 							if (!fullscreen) {
-								window.create(sf::VideoMode(windowWidth, windowHeight), "FunShooter", sf::Style::Fullscreen);/**/
+								window.create(sf::VideoMode(windowWidth, windowHeight), "Mini Mayhem", sf::Style::Fullscreen);/**/
 								fullscreen = true;
 							}
 							break;

@@ -8,18 +8,18 @@ World::World(int MAP_NUM)
 {
 	ifstream inFile;
 	if (MAP_NUM == 1) {
-		inFile.open("map1.txt");
+		inFile.open("assets/maps/map1.txt");
 		TileSize = 32.0f;
 		Scaled = 0.25f;
 		//Texture Initializations here
 		tileSet.resize(7);
-		tileSet[0].loadFromFile("textures/brown.jpg");
-		tileSet[1].loadFromFile("textures/metal.jpg");
-		tileSet[2].loadFromFile("textures/orange.jpg");
-		tileSet[3].loadFromFile("textures/blue.jpg");
-		tileSet[4].loadFromFile("textures/green.jpg");
-		tileSet[5].loadFromFile("textures/yellow.jpg");
-		tileSet[6].loadFromFile("textures/red.jpg");
+		tileSet[0].loadFromFile("assets/textures/brown.jpg");
+		tileSet[1].loadFromFile("assets/textures/metal.jpg");
+		tileSet[2].loadFromFile("assets/textures/orange.jpg");
+		tileSet[3].loadFromFile("assets/textures/blue.jpg");
+		tileSet[4].loadFromFile("assets/textures/green.jpg");
+		tileSet[5].loadFromFile("assets/textures/yellow.jpg");
+		tileSet[6].loadFromFile("assets/textures/red.jpg");
 	}
 
 	inFile >> x_tiles;
@@ -50,7 +50,7 @@ World::World(int MAP_NUM)
 	}
 	inFile.close();
 	/*ofstream testout;
-	testout.open("test.txt");
+	testout.open("assets/maps/test.txt");
 	for (int j = 0; j < y_tiles; j++)
 	{
 		for (int i = 0; i < x_tiles; i++)

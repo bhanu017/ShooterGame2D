@@ -1,8 +1,8 @@
 #pragma once
-#include <SFML\Graphics.hpp>
-#include "Player.h"
-#include "Bullet.h"
-#include "World.h"
+#include <SFML/Graphics.hpp>
+#include "entities/Player.h"
+#include "entities/Bullet.h"
+#include "core/World.h"
 
 class Resolver
 {

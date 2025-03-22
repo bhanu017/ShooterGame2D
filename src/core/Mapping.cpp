@@ -8,7 +8,7 @@ void Mapping::mapping()
 {
 	ofstream outFile;
 
-	outFile.open("map.txt");
+	outFile.open("assets/maps/map.txt");
 
 	int k = 0;
 

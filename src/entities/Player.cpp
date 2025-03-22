@@ -1,10 +1,12 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/Text.hpp>
 #include <math.h>
+#include <cmath>
+#include <iostream>
 #include "Player.h"
 #include <string>
-#include "Collision.h"
-#include "Resolver.h"
+#include "physics/Collision.h"
+#include "physics/Resolver.h"
 
 #define PI 3.14159265
 
@@ -27,10 +29,10 @@ Player::Player(std::string &name, sf::Font textfont, int id)
 	Text.setFillColor(sf::Color::Green);
 	//Text.setColor(sf::Color::White);
 	//Text.setPosition();
-	if (!Texture.loadFromFile("textures/lwalk_4.png")) {
+	if (!Texture.loadFromFile("assets/textures/lwalk_4.png")) {
 		
 	}
-	if (!TextureFly.loadFromFile("textures/lfly_4.png")) {
+	if (!TextureFly.loadFromFile("assets/textures/lfly_4.png")) {
 
 	}
 	Sprite.setTexture(Texture);

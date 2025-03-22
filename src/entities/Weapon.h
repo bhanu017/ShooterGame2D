@@ -1,9 +1,10 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include <string>
 #include "GameObject.h"
 #include "Bullet.h"
-#include "World.h"
+#include "core/World.h"
 
 class Weapon : public GameObject
 {

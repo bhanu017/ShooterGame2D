@@ -1,7 +1,8 @@
 #include <vector>
 #include <math.h>
+#include <cmath>
 #include "Weapon.h"
-#include "Collision.h"
+#include "physics/Collision.h"
 
 
 #define PI 3.14159265
@@ -17,21 +18,21 @@ Weapon::Weapon(std::string name, sf::Font textfont, sf::Vector2f pos)
 	if (name == "doublebarrel") {
 		TextureSize = sf::Vector2i(100, 100);	//164, 265 for hdr - change this
 		No_bullets = 56;
-		if (!Texture.loadFromFile("textures/doublebarrel.png")) {
+		if (!Texture.loadFromFile("assets/textures/doublebarrel.png")) {
 
 		}
 	}
 	else if (name == "weapon1") {
 		TextureSize = sf::Vector2i(100, 100);	//164, 265 for hdr - change this
 		No_bullets = 156;
-		if (!Texture.loadFromFile("textures/weapon1.png")) {
+		if (!Texture.loadFromFile("assets/textures/weapon1.png")) {
 
 		}
 	}
 	else if (name == "weapon2") {
 		TextureSize = sf::Vector2i(100, 100);	//164, 265 for hdr - change this
 		No_bullets = 134;
-		if (!Texture.loadFromFile("textures/weapon2.png")) {
+		if (!Texture.loadFromFile("assets/textures/weapon2.png")) {
 
 		}
 	}

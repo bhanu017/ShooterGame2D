@@ -1,6 +1,7 @@
 #include <math.h>
 #include "Bullet.h"
-#include "Collision.h"
+#include <cmath>
+#include "physics/Collision.h"
 
 #define PI 3.14159265
 
@@ -13,7 +14,7 @@ Bullet::Bullet(float scale, std::string player, sf::Font textfont, sf::Vector2f 
 	Scale = scale;	//change for hdr (approx. 0.5f) test for this - change this (may)
 	Text.setString("boom");		//if we want to rename bullet to damage taker, we can write bullet, grenade so on
 	Text.setFont(Font);
-	if (!Texture.loadFromFile("textures/bullet_new.png")) {
+	if (!Texture.loadFromFile("assets/textures/bullet_new.png")) {
 
 	}
 	Sprite.setTexture(Texture);

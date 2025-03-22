@@ -1,9 +1,10 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "Weapon.h"
+#include "GameObject.h"
+#include "core/World.h"
 #include <string>
 #include <vector>
-#include "World.h"
 
 class Player : public GameObject
 {
