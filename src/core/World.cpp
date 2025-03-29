@@ -10,7 +10,7 @@ World::World(int MAP_NUM)
 	if (MAP_NUM == 1) {
 		inFile.open("assets/maps/map1.txt");
 		TileSize = 32.0f;
-		Scaled = 0.25f;
+		Scaled = 0.5f;
 		//Texture Initializations here
 		tileSet.resize(7);
 		tileSet[0].loadFromFile("assets/textures/brown.jpg");

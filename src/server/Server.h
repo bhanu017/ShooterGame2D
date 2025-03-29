@@ -1,15 +1,17 @@
 #pragma once
 #include<SFML/Network.hpp>
-#include <vector>
+#include <map>
 #include <string>
+#include <vector>
+
 class Server
 {
 public:
 	Server();
 	~Server();
-	std::vector <sf::TcpSocket * > clients;
+	std::map<int, sf::TcpSocket*> clients;  // Map of player ID to socket
 	sf::SocketSelector selector;
 	bool done;
-	std::vector <std::string> names;
+	std::map<int, std::string> names;  // Map of player ID to name
 };
 
