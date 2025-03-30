@@ -133,7 +133,7 @@ int main(int argc, char* argv[])
 
 	if (selection == 2) {
 		sf::Font font;
-		if (!font.loadFromFile("assets/fonts/sans.ttf")) {
+		if (!font.loadFromFile("assets/fonts/DejaVuSans.ttf")) {
 			throw runtime_error("Failed to load font");
 		}
 
@@ -179,7 +179,7 @@ int main(int argc, char* argv[])
 	}
 	else if (selection == 1) {
 		sf::Font font;
-		if (!font.loadFromFile("assets/fonts/sans.ttf")) {
+		if (!font.loadFromFile("assets/fonts/DejaVuSans.ttf")) {
 			throw runtime_error("Failed to load font");
 		}
 

@@ -107,6 +107,12 @@ mini-mayhem/
 ./MiniMayhem 0
 ```
 
+Alternatively,
+Run in test mode:
+```bash
+./MiniMayhem 2
+```
+
 ## Controls
 
 - Arrow Keys: Move player

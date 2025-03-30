@@ -4,7 +4,7 @@
 
 Menu::Menu(float width, float height)
 {
-	if (!font.loadFromFile("assets/fonts/sans.ttf"))
+	if (!font.loadFromFile("assets/fonts/DejaVuSans.ttf"))
 	{
 		// handle error.
 	}
