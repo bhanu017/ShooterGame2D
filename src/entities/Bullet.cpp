@@ -1,28 +1,29 @@
-#include <math.h>
 #include "Bullet.h"
-#include <cmath>
 #include "physics/Collision.h"
 
+#include <cmath>
+#include <math.h>
+#include <exception>
 #define PI 3.14159265
 
-Bullet::Bullet(float scale, std::string player, sf::Font textfont, sf::Vector2f startpos, int angle)
+Bullet::Bullet(sf::Vector2f scale, std::string player, sf::Font textfont, sf::Vector2f startpos, int angle)
 {
 	Movable = true;
 	Owner = player;
 	Font = textfont;
-	TextureSize = sf::Vector2i(12, 6);	//for hdr - change this
-	Scale = scale;	//change for hdr (approx. 0.5f) test for this - change this (may)
-	Text.setString("boom");		//if we want to rename bullet to damage taker, we can write bullet, grenade so on
+	Scale = scale;
+	StartPos = startpos;
+	Text.setString("boom");
 	Text.setFont(Font);
+	TextureSize = sf::Vector2f(12, 6);
 	if (!Texture.loadFromFile("assets/textures/bullet_new.png")) {
-
+		throw std::runtime_error("Failed to load texture");
 	}
 	Sprite.setTexture(Texture);
+	Sprite.setScale(Scale);
 	Sprite.setTextureRect(sf::IntRect(0, 0, TextureSize.x, TextureSize.y));
 	Sprite.setOrigin(TextureSize.x / 2, TextureSize.y / 2);
-	Sprite.setScale(sf::Vector2f(Scale, Scale));
 	Speed = 100.0f;
-	StartPos = startpos;
 	Damage = 35;
 	Angle = angle;
 	Sprite.setPosition(StartPos);

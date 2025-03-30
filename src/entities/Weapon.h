@@ -9,7 +9,7 @@
 class Weapon : public GameObject
 {
 public:
-	Weapon(std::string name, sf::Font textfont, sf::Vector2f pos);
+	Weapon(std::string name, sf::Font textfont, sf::Vector2f pos, sf::Vector2f scale);
 	~Weapon();
 	void freefall(World &world);
 	void update(sf::Vector2f pos, int angle, sf::RenderWindow &window);
@@ -21,4 +21,3 @@ public:
 private:
 
 };
-

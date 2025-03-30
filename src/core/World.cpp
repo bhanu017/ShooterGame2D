@@ -1,25 +1,26 @@
 #include "World.h"
+#include <exception>
 #include <fstream>
-#include <iostream>
-using namespace std;
 
-
-World::World(int MAP_NUM)
+World::World(int MAP_NUM, sf::Vector2f scale)
 {
-	ifstream inFile;
+	std::ifstream inFile;
 	if (MAP_NUM == 1) {
-		inFile.open("assets/maps/map1.txt");
-		TileSize = 32.0f;
-		Scaled = 0.5f;
+		inFile.open("assets/maps/TiledMap_1.txt");
+		if (!inFile.is_open()) {
+			throw std::runtime_error("Failed to open map file");
+		}
+		Scale = scale;
 		//Texture Initializations here
-		tileSet.resize(7);
+		tileSet.resize(6);
 		tileSet[0].loadFromFile("assets/textures/brown.jpg");
 		tileSet[1].loadFromFile("assets/textures/metal.jpg");
-		tileSet[2].loadFromFile("assets/textures/orange.jpg");
-		tileSet[3].loadFromFile("assets/textures/blue.jpg");
-		tileSet[4].loadFromFile("assets/textures/green.jpg");
-		tileSet[5].loadFromFile("assets/textures/yellow.jpg");
-		tileSet[6].loadFromFile("assets/textures/red.jpg");
+		tileSet[2].loadFromFile("assets/textures/blue.jpg");
+		tileSet[3].loadFromFile("assets/textures/metal.jpg");
+		tileSet[4].loadFromFile("assets/textures/yellow.jpg");
+		tileSet[5].loadFromFile("assets/textures/green.jpg");
+
+		TileSize = sf::Vector2f(tileSet[0].getSize().x * scale.x, tileSet[0].getSize().y * scale.y);
 	}
 
 	inFile >> x_tiles;
@@ -36,32 +37,17 @@ World::World(int MAP_NUM)
 	{
 		for (int i = 0; i < x_tiles; i++)
 		{
-
 			inFile >> tile_index[i][j];
-			if ((tile_index[i][j] > 3) && (tile_index[i][j] < 8)) tile_index[i][j] = 4;
-			if (tile_index[i][j] >= 8) tile_index[i][j] -= 3;
 			if (tile_index[i][j] != 0) {
-				spriteMap[x].setTexture(tileSet[tile_index[i][j]-1]);
-				spriteMap[x].setScale(Scaled, Scaled);
-				spriteMap[x].setPosition(sf::Vector2f(i*TileSize, j*TileSize));
+				spriteMap[x].setTexture(tileSet[(tile_index[i][j]-1)%6]);
+				spriteMap[x].setScale(Scale);
+				spriteMap[x].setPosition(TileSize.x * i, TileSize.y * j);
 				x++;
 			}
 		}
 	}
 	inFile.close();
-	/*ofstream testout;
-	testout.open("assets/maps/test.txt");
-	for (int j = 0; j < y_tiles; j++)
-	{
-		for (int i = 0; i < x_tiles; i++)
-		{
-			testout << i << "	" << j << "	" << tile_index[i][j] << endl;
-		}
-	}
-	testout.close();*/
 }
-
-
 
 World::~World()
 {
@@ -73,5 +59,3 @@ void World::draw(sf::RenderWindow & window)
 		window.draw(spriteMap[i]);
 	}
 }
-
-

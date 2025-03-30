@@ -9,7 +9,7 @@
 class Player : public GameObject
 {
 public:
-	Player(std::string &Name, sf::Font textfont, int id);
+	Player(std::string &Name, sf::Font textfont, int id, sf::Vector2f scale, sf::RenderWindow &window);
 	~Player();
 	float HSpeed;
 	float VSpeed;
@@ -35,7 +35,7 @@ private:
 	int TextureCounter = 0;
 	float GForce;
 	float JetForce;
-	sf::Vector2i TextureFlySize;
+	sf::Vector2f TextureFlySize;
 	sf::Texture TextureFly;
 protected:
 };

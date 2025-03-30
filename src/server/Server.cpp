@@ -12,12 +12,11 @@ Server::Server()
 
 	// Try to bind to all available network interfaces
 	if (listener.listen(5400) != sf::Socket::Done) {
-		cout << "Failed to start server on port 5400" << endl;
-		return;
+		throw runtime_error("Failed to start server on port 5400");
 	}
 
-	cout << "Server successfully started on port 5400" << endl;
-	cout << "Server IP: " << sf::IpAddress::getLocalAddress().toString() << endl;
+	std::cout << "Server successfully started on port 5400" << std::endl;
+	std::cout << "Server IP: " << sf::IpAddress::getLocalAddress().toString() << std::endl;
 
 	selector.add(listener);
 	done = false;
@@ -25,7 +24,7 @@ Server::Server()
 	clock.restart();
 	int playerCount = 0;
 
-	cout << "Waiting for players to connect..." << endl;
+	std::cout << "Waiting for players to connect..." << std::endl;
 
 	while (!done && clock.getElapsedTime().asSeconds() < timer)
 	{
@@ -36,9 +35,9 @@ Server::Server()
 				sf::TcpSocket* socket = new sf::TcpSocket;
 				if (listener.accept(*socket) == sf::Socket::Done)
 				{
-					cout << "New client connected from " << socket->getRemoteAddress().toString() << endl;
+					std::cout << "New client connected from " << socket->getRemoteAddress().toString() << std::endl;
 					sf::Packet packet;
-					string name;
+					std::string name;
 
 					if (socket->receive(packet) == sf::Socket::Done)
 					{
@@ -48,14 +47,13 @@ Server::Server()
 						clients[id] = socket;
 						selector.add(*socket);
 
-						cout << name << " has been connected with id == " << id << endl;
+						std::cout << name << " has been connected with id == " << id << std::endl;
 
 						// Send ID to the new client
 						packet.clear();
 						packet << id;
 						if (socket->send(packet) != sf::Socket::Done) {
-							cout << "Failed to send ID to client " << name << endl;
-							continue;
+							throw runtime_error("Failed to send ID to client " + name);
 						}
 
 						// Send updated player list to all clients
@@ -68,7 +66,7 @@ Server::Server()
 						for (const auto& pair : clients)
 						{
 							if (pair.second->send(packet) != sf::Socket::Done) {
-								cout << "Failed to send player list to a client" << endl;
+								throw runtime_error("Failed to send player list to a client " + names[pair.first]);
 							}
 						}
 
@@ -76,19 +74,14 @@ Server::Server()
 					}
 					else
 					{
-						cout << "Failed to receive player name from " << socket->getRemoteAddress().toString() << endl;
-						delete socket;
+						throw runtime_error("Failed to receive player name from " + socket->getRemoteAddress().toString());
 					}
 				}
 				else
 				{
-					cout << "Failed to accept connection" << endl;
+					throw runtime_error("Failed to accept connection");
 					delete socket;
 				}
-			}
-			else
-			{
-				
 			}
 		}
 		else
@@ -96,27 +89,26 @@ Server::Server()
 			auto elapsed = clock.getElapsedTime().asMilliseconds();
 			if (elapsed % 1000 > 0 && elapsed % 1000 < 100)
 			{
-				cout << "Game starts in " << (timer - elapsed / 1000) << " seconds" << endl;
+				std::cout << "Game starts in " << (timer - elapsed / 1000) << " seconds" << std::endl;
 			}
 		}
 	}
 
 	if (clients.empty())
 	{
-		cout << "No players connected. Server shutting down." << endl;
+		std::cout << "No players connected. Server shutting down." << std::endl;
 		return;
 	}
 	else
 	{
-		cout << "Server running with " << clients.size() << " players connected" << endl;
+		std::cout << "Server running with " << clients.size() << " players connected" << std::endl;
 
 		// Send start signal to all clients
 		sf::Packet packet;
 		packet << 0; // 0 means game can start
 		for (auto& client : clients) {
 			if (client.second->send(packet) != sf::Socket::Done) {
-				cout << "Failed to send start signal" << endl;
-				return;
+				throw runtime_error("Failed to send start signal");
 			}
 		}
 		packet.clear();
@@ -143,7 +135,7 @@ Server::Server()
 							if (pair.first != it->first)
 							{
 								if (pair.second->send(packet) != sf::Socket::Done) {
-									cout << "Failed to broadcast message to client " << pair.first << endl;
+									throw runtime_error("Failed to broadcast message to client " + std::to_string(pair.first));
 								}
 							}
 						}
@@ -153,7 +145,7 @@ Server::Server()
 					else if (it->second->receive(packet) == sf::Socket::Disconnected)
 					{
 						// Handle client disconnection
-						cout << "Client " << it->first << " disconnected" << endl;
+						std::cout << "Client " << it->first << " disconnected" << std::endl;
 						selector.remove(*it->second);
 						delete it->second;
 						names.erase(it->first);
@@ -195,5 +187,5 @@ Server::~Server()
 	{
 		delete pair.second;
 	}
-	cout << "Server destroyed" << endl;
+	std::cout << "Server destroyed" << std::endl;
 }

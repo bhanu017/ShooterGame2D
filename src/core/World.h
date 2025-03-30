@@ -6,21 +6,16 @@
 class World
 {
 public:
-	World(int MAP_NUM);
+	World(int MAP_NUM, sf::Vector2f scale);
 	~World();
 
 	std::vector<std::vector<int>> tile_index; // stores whether a tile at a given index is a solid tile or empty tile.
 	int x_tiles;
 	int y_tiles; // stores number of tiles in horizontal and vertical direction.
-	float TileSize;
+	sf::Vector2f TileSize;
 	std::vector<sf::Sprite> spriteMap;
 	std::vector<sf::Texture> tileSet;
 	int NumTiles;
 	void draw(sf::RenderWindow &window);
-	float Scaled = 1.0f;
+	sf::Vector2f Scale = sf::Vector2f(1.0f, 1.0f);
 };
-
-/*int World::x_tiles = 1;
-int World::y_tiles = 1;
-int World::tile_index.resize(1);
-int World::tile_index[0].resize(1);*/

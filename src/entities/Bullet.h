@@ -8,7 +8,7 @@
 class Bullet : public GameObject
 {
 public:
-	Bullet(float scale, std::string name, sf::Font textfont, sf::Vector2f startpos, int angle);
+	Bullet(sf::Vector2f scale, std::string name, sf::Font textfont, sf::Vector2f startpos, int angle);
 	~Bullet();
 	bool update(World &world);
 private:
@@ -18,4 +18,3 @@ private:
 	sf::Vector2f StartPos;
 	int Angle;
 };
-

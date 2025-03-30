@@ -1,61 +1,61 @@
-#include <SFML/Graphics.hpp>
-#include <SFML/Graphics/Text.hpp>
-#include <math.h>
-#include <cmath>
-#include <iostream>
 #include "Player.h"
-#include <string>
 #include "physics/Collision.h"
 #include "physics/Resolver.h"
 
+#include <SFML/Graphics.hpp>
+#include <SFML/Graphics/Text.hpp>
+
+#include <cmath>
+#include <iostream>
+#include <math.h>
+#include <string>
+
 #define PI 3.14159265
 
+using namespace std;
 
-//using namespace std;
-
-Player::Player(std::string &name, sf::Font textfont, int id)
+Player::Player(std::string &name, sf::Font textfont, int id, sf::Vector2f scale, sf::RenderWindow &window)
 {
-	sf::Vector2i sizeOfTile = sf::Vector2i(20, 20);
 	Movable = true;
 	Id = id;
-	TextureSize = sf::Vector2i(95, 154);	//164, 265 for hdr
-	TextureFlySize = sf::Vector2i(101, 222);	//174, 382 for hdr
+	TextureSize = sf::Vector2f(95, 154);
+	TextureFlySize = sf::Vector2f(101, 222);
 	Font = textfont;
-	Scale = 0.5f;	//change for hdr (approx. 0.5f) test for this
+	Scale = scale;
 	Name = name;
 	Text.setString(name);
 	Text.setFont(Font);
-	Text.setCharacterSize((int) 24*Scale);	//36 for hdr
+	Text.setCharacterSize((int) 24*Scale.x);
 	Text.setFillColor(sf::Color::Green);
-	//Text.setColor(sf::Color::White);
-	//Text.setPosition();
+	Text.setPosition(Sprite.getPosition());
 	if (!Texture.loadFromFile("assets/textures/lwalk_4.png")) {
-		
+		cout << "Failed to load texture" << endl;
 	}
 	if (!TextureFly.loadFromFile("assets/textures/lfly_4.png")) {
-
+		cout << "Failed to load texture" << endl;
 	}
 	Sprite.setTexture(Texture);
 	Sprite.setTextureRect(sf::IntRect(0,0, TextureSize.x, TextureSize.y));
-	Sprite.setScale(sf::Vector2f(Scale, Scale));
-	Sprite.setOrigin(TextureSize.x / 2, TextureSize.y / 2);
+	Sprite.setScale(Scale);
+	Sprite.setOrigin(TextureSize.x, TextureSize.y);
+	Sprite.setPosition(window.getSize().x / 3, window.getSize().y / 3);
 	Health = 100;
 	Nitro = 2000;
 	HSpeedWalk = 90.0f;
 	VSpeed = 0.0f;
 	HSpeedFly = 180.0f;
-	JetForce = -1000.0f;
+	JetForce = -600.0f;
 	SpeedLimit = 250.0f;
 	LastDamager = "";
-	GForce = 400.0f;
+	GForce = 300.0f;
 	TextureCounter = 0;
 	Text.setPosition(Sprite.getPosition());
-	Text.move(sf::Vector2f(Scale*TextureSize.x / 4, Scale*TextureSize.y/2));
-	CurrentWeapon = new Weapon("weapon1", Font, Sprite.getPosition());
-	OtherWeapon = new Weapon("weapon2", Font, Sprite.getPosition());
+	Text.move(sf::Vector2f(Scale.x*TextureSize.x / 4, Scale.y*TextureSize.y/2));
+	CurrentWeapon = new Weapon("weapon1", Font, Sprite.getPosition(), Scale);
+	OtherWeapon = new Weapon("weapon2", Font, Sprite.getPosition(), Scale);
 	focusline.setSize(sf::Vector2f(1000.0f, 1.0f));
 	focusline.setOrigin(sf::Vector2f(0.0f, 0.5f));
-	focusline.setFillColor(sf::Color::White);
+	focusline.setFillColor(sf::Color::Red);
 }
 
 
@@ -83,7 +83,7 @@ void Player::update(sf::RenderWindow &window, World &world)
 			JetForce = 0;
 			Nitro = 20;
 		}
-		else Nitro -= 8;
+		else Nitro -= 4;
 		PrevPos = Sprite.getPosition();
 		this->Sprite.move(0.0f, VSpeed / 30 + 0.5f*(JetForce + GForce)*(1 / 900));// check for collision after this.
 		Collision::resolveBounds(window, this, world);
@@ -101,7 +101,7 @@ void Player::update(sf::RenderWindow &window, World &world)
 		if (sf::Mouse::getPosition(window).x > window.getSize().x / 2) this->Sprite.setTextureRect(sf::IntRect((TextureCounter / 4)*TextureFlySize.x + 5, 0, TextureFlySize.x, TextureFlySize.y));	// +9 or 10 for hdr
 		else this->Sprite.setTextureRect(sf::IntRect((TextureCounter / 4 + 1)*TextureFlySize.x + 5, 0, -TextureFlySize.x, TextureFlySize.y));	// +9 or 10 for hdr
 		if (!pIsFlying) Sprite.setOrigin(TextureFlySize.x / 2, TextureSize.y / 2);
-		if (!pIsFlying) Sprite.setScale(sf::Vector2f(Scale, Scale));
+		if (!pIsFlying) Sprite.setScale(Scale);
 		temp_prev = Sprite.getRotation();
 		Sprite.setRotation(0);
 		if (temp_prev != Sprite.getRotation()) {
@@ -118,7 +118,7 @@ void Player::update(sf::RenderWindow &window, World &world)
 			Nitro = 20;
 			JetForce = 0;
 		}
-		else Nitro -= 8;
+		else Nitro -= 4;
 		PrevPos = Sprite.getPosition();
 		this->Sprite.move(0.0f, VSpeed / 30 + 0.5f*(-JetForce + GForce)*(1 / 900)); // Check for collision after this
 		Collision::resolveBounds(window, this, world);
@@ -136,7 +136,7 @@ void Player::update(sf::RenderWindow &window, World &world)
 		if (sf::Mouse::getPosition(window).x > window.getSize().x / 2) this->Sprite.setTextureRect(sf::IntRect((TextureCounter / 4 + 1)*TextureFlySize.x + 5, 0, -TextureFlySize.x, TextureFlySize.y));	// +9 or 10 for hdr
 		else this->Sprite.setTextureRect(sf::IntRect((TextureCounter / 4)*TextureFlySize.x + 5, 0, TextureFlySize.x, TextureFlySize.y));	// +9 or 10 for hdr
 		if (!pIsFlying) Sprite.setOrigin(TextureFlySize.x / 2, TextureSize.y / 2);
-		if (!pIsFlying) Sprite.setScale(sf::Vector2f(Scale, Scale));
+		if (!pIsFlying) Sprite.setScale(Scale);
 		temp_prev = Sprite.getRotation();
 		Sprite.setRotation(180);
 		if (temp_prev != Sprite.getRotation()) {
@@ -153,9 +153,9 @@ void Player::update(sf::RenderWindow &window, World &world)
 			Nitro = 20;
 			JetForce = 0;
 		}
-		else Nitro -= 8;
+		else Nitro -= 4;
 		if (IsFlying) {
-			Nitro += 4;
+			Nitro += 1;
 		}
 		HSpeed = -HSpeedFly;
 		PrevPos = Sprite.getPosition();
@@ -184,7 +184,7 @@ void Player::update(sf::RenderWindow &window, World &world)
 			if (sf::Mouse::getPosition(window).x > window.getSize().x / 2) this->Sprite.setTextureRect(sf::IntRect((TextureCounter / 4)*TextureFlySize.x + 5, 0, TextureFlySize.x, TextureFlySize.y)); // +9 or 10 for hdr
 			else this->Sprite.setTextureRect(sf::IntRect((TextureCounter / 4)*TextureFlySize.x + 5, 0, TextureFlySize.x, TextureFlySize.y)); // +9 or 10 for hdr
 			Sprite.setOrigin(TextureFlySize.x / 2, TextureSize.y / 2);
-			Sprite.setScale(sf::Vector2f(Scale, Scale));
+			Sprite.setScale(Scale);
 		}
 		int temp2 = Sprite.getRotation();
 		if (temp2 == 0) temp2 = 360;
@@ -217,9 +217,9 @@ void Player::update(sf::RenderWindow &window, World &world)
 			Nitro = 20;
 			JetForce = 0;
 		}
-		else Nitro -= 8;
+		else Nitro -= 4;
 		if (IsFlying) {
-			Nitro += 4;
+			Nitro += 1;
 		}
 		HSpeed = HSpeedFly;
 		PrevPos = Sprite.getPosition();
@@ -248,7 +248,7 @@ void Player::update(sf::RenderWindow &window, World &world)
 			if (sf::Mouse::getPosition(window).x > window.getSize().x / 2) this->Sprite.setTextureRect(sf::IntRect((TextureCounter / 4)*TextureFlySize.x + 5, 0, TextureFlySize.x, TextureFlySize.y)); // +9 or 10 for hdr
 			else this->Sprite.setTextureRect(sf::IntRect((TextureCounter / 4)*TextureFlySize.x + 5, 0, TextureFlySize.x, TextureFlySize.y)); // +9 or 10 for hdr
 			Sprite.setOrigin(TextureFlySize.x / 2, TextureSize.y / 2);
-			if (!IsFlying) Sprite.setScale(sf::Vector2f(Scale, Scale));
+			if (!IsFlying) Sprite.setScale(Scale);
 		}
 		if (IsFlying) {
 
@@ -303,7 +303,7 @@ void Player::update(sf::RenderWindow &window, World &world)
 			if (sf::Mouse::getPosition(window).x > window.getSize().x / 2) this->Sprite.setTextureRect(sf::IntRect((TextureCounter / 4)*TextureSize.x, 0, TextureSize.x, TextureSize.y));
 			else this->Sprite.setTextureRect(sf::IntRect((TextureCounter / 4 + 1)*TextureSize.x, 0, -TextureSize.x, TextureSize.y));
 			Sprite.setOrigin(TextureSize.x / 2, TextureSize.y / 2);
-			Sprite.setScale(sf::Vector2f(Scale, Scale));
+			Sprite.setScale(Scale);
 			temp_prev = Sprite.getRotation();
 			Sprite.setRotation(0);
 			if (temp_prev != Sprite.getRotation()) {
@@ -343,7 +343,7 @@ void Player::update(sf::RenderWindow &window, World &world)
 			if (sf::Mouse::getPosition(window).x > window.getSize().x / 2) this->Sprite.setTextureRect(sf::IntRect((TextureCounter / 4)*TextureSize.x, 0, TextureSize.x, TextureSize.y));
 			else this->Sprite.setTextureRect(sf::IntRect((TextureCounter / 4 + 1)*TextureSize.x, 0, -TextureSize.x, TextureSize.y));
 			Sprite.setOrigin(TextureSize.x / 2, TextureSize.y / 2);
-			Sprite.setScale(sf::Vector2f(Scale, Scale));
+			Sprite.setScale(Scale);
 			temp_prev = Sprite.getRotation();
 			Sprite.setRotation(0);
 			if (temp_prev != Sprite.getRotation()) {
@@ -374,7 +374,7 @@ void Player::update(sf::RenderWindow &window, World &world)
 		if (sf::Mouse::getPosition(window).x > window.getSize().x/2) this->Sprite.setTextureRect(sf::IntRect((TextureCounter / 4)*TextureSize.x, 0, TextureSize.x, TextureSize.y));
 		else this->Sprite.setTextureRect(sf::IntRect((TextureCounter / 4 + 1)*TextureSize.x, 0, -TextureSize.x, TextureSize.y));
 		if (pIsFlying) {
-			Sprite.setScale(sf::Vector2f(Scale, Scale));
+			Sprite.setScale(Scale);
 			Sprite.setOrigin(TextureSize.x / 2, TextureSize.y / 2);
 			temp_prev = Sprite.getRotation();
 			Sprite.setRotation(0);
@@ -387,7 +387,7 @@ void Player::update(sf::RenderWindow &window, World &world)
 		}
 	}
 	Text.setPosition(Sprite.getPosition());
-	Text.move(sf::Vector2f(Scale*TextureSize.x / 4, Scale*TextureSize.y / 2));
+	Text.move(sf::Vector2f(Scale.x*TextureSize.x / 4, Scale.y*TextureSize.y / 2));
 	if (Nitro < 1999) Nitro += 2;
 	else Nitro = 2000;
 
@@ -395,7 +395,10 @@ void Player::update(sf::RenderWindow &window, World &world)
 	if (CurrentWeapon != NULL) CurrentWeapon->update(Sprite.getPosition(), atan((sf::Mouse::getPosition(window).y + Sprite.getPosition().y - window.getSize().y/2 - CurrentWeapon->Sprite.getPosition().y) / (sf::Mouse::getPosition(window).x + Sprite.getPosition().x - window.getSize().x / 2 - CurrentWeapon->Sprite.getPosition().x)) * 180 / PI, window);
 	if (OtherWeapon != NULL) OtherWeapon->update(Sprite.getPosition(), atan((sf::Mouse::getPosition(window).y + Sprite.getPosition().y - window.getSize().y / 2 - OtherWeapon->Sprite.getPosition().y) / (sf::Mouse::getPosition(window).x + Sprite.getPosition().x - window.getSize().x / 2 - OtherWeapon->Sprite.getPosition().x)) * 180 / PI, window);
 	//positioning focus line for current weapon
-	if (CurrentWeapon != NULL) focusline.setPosition(CurrentWeapon->Sprite.getPosition());
+	if (CurrentWeapon != NULL) {
+		focusline.setPosition(CurrentWeapon->Sprite.getPosition());
+		focusline.move(sf::Vector2f(Scale.x*TextureSize.x / 2, 0));
+	}
 	if (CurrentWeapon != NULL) {
 		if (sf::Mouse::getPosition(window).x > window.getSize().x / 2) {
 			focusline.setRotation(CurrentWeapon->Angle);
@@ -448,7 +451,13 @@ void Player::changeweapon()
 }
 
 void Player::draw(sf::RenderWindow & window, int mainPlayer) {
-	window.draw(this->Sprite);
+	GameObject::draw(window);
+	GameObject::drawText(window);
+
+	if (CurrentWeapon != NULL) {
+		CurrentWeapon->draw(window);
+	}
+
 	if (mainPlayer == Id) {
 		if (CurrentWeapon != NULL) window.draw(focusline);
 	}

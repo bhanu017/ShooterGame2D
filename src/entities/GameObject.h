@@ -6,16 +6,16 @@ class GameObject
 public:
 	sf::Sprite Sprite;
 	bool Movable;
-	sf::Vector2i TextureSize;
+	sf::Vector2f TextureSize;
 	GameObject();
 	~GameObject();
 	void draw(sf::RenderWindow &window);
-	float getScale();
+	void drawText(sf::RenderWindow &window);
+	sf::Vector2f getScale();
 private:
 protected:
 	sf::Font Font;
 	sf::Text Text;
 	sf::Texture Texture;
-	float Scale = 1.0f;
+	sf::Vector2f Scale = sf::Vector2f(1.0f, 1.0f);
 };
-

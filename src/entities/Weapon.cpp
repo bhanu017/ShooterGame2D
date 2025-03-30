@@ -1,44 +1,48 @@
-#include <vector>
-#include <math.h>
-#include <cmath>
 #include "Weapon.h"
 #include "physics/Collision.h"
 
+#include <cmath>
+#include <exception>
+#include <math.h>
+#include <vector>
 
 #define PI 3.14159265
 
-Weapon::Weapon(std::string name, sf::Font textfont, sf::Vector2f pos)
+Weapon::Weapon(std::string name, sf::Font textfont, sf::Vector2f pos, sf::Vector2f scale)
 {
 	Movable = false;
 	Font = textfont;
-	Scale = 0.5f;	//change for hdr (approx. 0.5f) test for this - change this (may)
-	Text.setString("Me ..the Destroyer");		//if we want to rename bullet to damage taker, we can write bullet, grenade so on
+	Scale = scale;
+	Text.setString("Me ..the Destroyer");
 	Text.setFont(Font);
 	Name = name;
 	if (name == "doublebarrel") {
-		TextureSize = sf::Vector2i(100, 100);	//164, 265 for hdr - change this
+		TextureSize = sf::Vector2f(100, 100);
 		No_bullets = 56;
 		if (!Texture.loadFromFile("assets/textures/doublebarrel.png")) {
-
+			throw std::runtime_error("Failed to load texture");
 		}
 	}
 	else if (name == "weapon1") {
-		TextureSize = sf::Vector2i(100, 100);	//164, 265 for hdr - change this
+		TextureSize = sf::Vector2f(100, 100);
 		No_bullets = 156;
 		if (!Texture.loadFromFile("assets/textures/weapon1.png")) {
-
+			throw std::runtime_error("Failed to load texture");
 		}
 	}
 	else if (name == "weapon2") {
-		TextureSize = sf::Vector2i(100, 100);	//164, 265 for hdr - change this
+		TextureSize = sf::Vector2f(100, 100);
 		No_bullets = 134;
 		if (!Texture.loadFromFile("assets/textures/weapon2.png")) {
-
+			throw std::runtime_error("Failed to load texture");
 		}
+	}
+	else {
+		throw std::runtime_error("Invalid weapon name");
 	}
 	Sprite.setTexture(Texture);
 	Sprite.setTextureRect(sf::IntRect(0, 0, TextureSize.x, TextureSize.y));
-	Sprite.setScale(sf::Vector2f(Scale, Scale));
+	Sprite.setScale(Scale);
 	if (Name == "weapon1") {
 		Sprite.setOrigin(41, 41);
 	}
@@ -49,7 +53,7 @@ Weapon::Weapon(std::string name, sf::Font textfont, sf::Vector2f pos)
 		Sprite.setOrigin(20, 45);
 	}
 	else {
-		Sprite.setOrigin(TextureSize.x / 3, TextureSize.y / 2);
+		throw std::runtime_error("Invalid weapon name");
 	}
 	Sprite.setPosition(pos.x + TextureSize.x / 20, pos.y - TextureSize.y / 8);
 	Velocity.x = 0.0f;
@@ -113,7 +117,7 @@ bool Weapon::fire(std::string pname, std::vector<Bullet *> &list, sf::RenderWind
 			if (sf::Mouse::getPosition(window).x >= window.getSize().x / 2) {
 				Spark.setTextureRect(sf::IntRect(38, 0, -38, 25));
 				Spark.setOrigin(0, 25 / 2);
-				Spark.setScale(Scale, Scale);
+				Spark.setScale(Scale);
 				Spark.setPosition(sf::Vector2f(Sprite.getPosition().x + cos(PI*Angle / 180) * (85.0f - Sprite.getOrigin().x), Sprite.getPosition().y + sin(PI*Angle / 180) *(85.0f - Sprite.getOrigin().x)));
 				Spark.setRotation(Angle);
 				list.push_back(new Bullet(Scale, pname, Font, sf::Vector2f(Sprite.getPosition().x + cos(PI*Angle / 180) * (85.0f - Sprite.getOrigin().x), Sprite.getPosition().y + sin(PI*Angle / 180) * (85.0f - Sprite.getOrigin().x)), Angle - 15));
@@ -124,7 +128,7 @@ bool Weapon::fire(std::string pname, std::vector<Bullet *> &list, sf::RenderWind
 			else {
 				Spark.setTextureRect(sf::IntRect(0, 0, 38, 25));
 				Spark.setOrigin(38, 25 / 2);
-				Spark.setScale(Scale, Scale);
+				Spark.setScale(Scale);
 				Spark.setPosition(sf::Vector2f(Sprite.getPosition().x - cos(PI*Angle / 180) * (Sprite.getOrigin().x - 15.0f), Sprite.getPosition().y - sin(PI*Angle / 180) * (Sprite.getOrigin().x - 15.0f)));
 				Spark.setRotation(Angle);
 				list.push_back(new Bullet(Scale, pname, Font, sf::Vector2f(Sprite.getPosition().x - cos(PI*Angle / 180) * (Sprite.getOrigin().x - 15.0f), Sprite.getPosition().y - sin(PI*Angle / 180) * (Sprite.getOrigin().x - 15.0f)), Angle - 15 + 180));
@@ -137,7 +141,7 @@ bool Weapon::fire(std::string pname, std::vector<Bullet *> &list, sf::RenderWind
 			if (sf::Mouse::getPosition(window).x >= window.getSize().x / 2) {
 				Spark.setTextureRect(sf::IntRect(38, 0, -38, 25));
 				Spark.setOrigin(0, 25 / 2);
-				Spark.setScale(Scale, Scale);
+				Spark.setScale(Scale);
 				Spark.setPosition(sf::Vector2f(Sprite.getPosition().x + cos(PI*Angle / 180) * (75.0f - Sprite.getOrigin().x), Sprite.getPosition().y + sin(PI*Angle / 180) * (75.0f - Sprite.getOrigin().x)));
 				Spark.setRotation(Angle);
 				list.push_back(new Bullet(Scale, pname, Font, sf::Vector2f(Sprite.getPosition().x + cos(PI*Angle / 180) * (75.0f - Sprite.getOrigin().x), Sprite.getPosition().y + sin(PI*Angle / 180) * (75.0f - Sprite.getOrigin().x)), Angle));
@@ -145,7 +149,7 @@ bool Weapon::fire(std::string pname, std::vector<Bullet *> &list, sf::RenderWind
 			else {
 				Spark.setTextureRect(sf::IntRect(0, 0, 38, 25));
 				Spark.setOrigin(38, 25 / 2);
-				Spark.setScale(Scale, Scale);
+				Spark.setScale(Scale);
 				Spark.setPosition(sf::Vector2f(Sprite.getPosition().x - cos(PI*Angle / 180) * (Sprite.getOrigin().x - 25.0f), Sprite.getPosition().y - sin(PI*Angle / 180) * (Sprite.getOrigin().x - 25.0f)));
 				Spark.setRotation(Angle);
 				list.push_back(new Bullet(Scale, pname, Font, sf::Vector2f(Sprite.getPosition().x - cos(PI*Angle / 180) * (Sprite.getOrigin().x - 25.0f), Sprite.getPosition().y - sin(PI*Angle / 180) * (Sprite.getOrigin().x - 25.0f)), Angle + 180));
@@ -155,7 +159,7 @@ bool Weapon::fire(std::string pname, std::vector<Bullet *> &list, sf::RenderWind
 			if (sf::Mouse::getPosition(window).x >= window.getSize().x / 2) {
 				Spark.setTextureRect(sf::IntRect(38, 0, -38, 25));
 				Spark.setOrigin(0, 25 / 2);
-				Spark.setScale(Scale, Scale);
+				Spark.setScale(Scale);
 				Spark.setPosition(sf::Vector2f(Sprite.getPosition().x + cos(PI*Angle / 180) * (82.0f - Sprite.getOrigin().x), Sprite.getPosition().y + sin(PI*Angle / 180) * (82.0f - Sprite.getOrigin().x)));
 				Spark.setRotation(Angle);
 				list.push_back(new Bullet(Scale, pname, Font, sf::Vector2f(Sprite.getPosition().x + cos(PI*Angle / 180) * (82.0f - Sprite.getOrigin().x), Sprite.getPosition().y + sin(PI*Angle / 180) * (82.0f - Sprite.getOrigin().x)), Angle));
@@ -163,7 +167,7 @@ bool Weapon::fire(std::string pname, std::vector<Bullet *> &list, sf::RenderWind
 			else {
 				Spark.setTextureRect(sf::IntRect(0, 0, 38, 25));
 				Spark.setOrigin(38, 25 / 2);
-				Spark.setScale(Scale, Scale);
+				Spark.setScale(Scale);
 				Spark.setPosition(sf::Vector2f(Sprite.getPosition().x - cos(PI*Angle / 180) * (Sprite.getOrigin().x - 18.0f), Sprite.getPosition().y - sin(PI*Angle / 180) * (Sprite.getOrigin().x - 18.0f)));
 				Spark.setRotation(Angle);
 				list.push_back(new Bullet(Scale, pname, Font, sf::Vector2f(Sprite.getPosition().x - cos(PI*Angle / 180) * (Sprite.getOrigin().x - 18.0f), Sprite.getPosition().y - sin(PI*Angle / 180) * (Sprite.getOrigin().x - 18.0f)), Angle + 180));
